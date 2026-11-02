@@ -10,7 +10,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
             Research Methodology &bull; Nottingham Trent University FYP (N1427018)
         </div>
-        <h1 style="font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; color: #0f172a;">
+        <h1 style="font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--heading-color);">
             Methodology &amp; System Architecture
         </h1>
         <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">
@@ -23,10 +23,10 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">Academic Research Aim &amp; Question</h3>
         </header>
-        <p style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+        <p style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; color: var(--body-color);">
             <strong>Aim:</strong> To design, implement, and evaluate a website that detects phishing URLs by combining rule-based and machine-learning techniques, explaining its results clearly to non-technical users.
         </p>
-        <blockquote style="border-left: 4px solid var(--primary); padding-left: 1rem; color: #334155; font-style: italic; margin: 0;">
+        <blockquote style="border-left: 4px solid var(--primary); padding-left: 1rem; color: var(--body-color); font-style: italic; margin: 0;">
             <strong>Research Question:</strong> Can URL rules combined with a Random Forest on URL-only features reach at least 0.90 phishing precision and recall on unseen URLs, with reasons non-experts can follow?
         </blockquote>
     </article>
@@ -40,7 +40,7 @@
             Grounded in foundational studies (Zhang, Hong &amp; Cranor, 2007; Mohammad, Thabtah &amp; McCluskey, 2014) and the PhiUSIIL benchmark (Prasad &amp; Chandra, 2024a), Phishield deterministically inspects 13 syntactic indicators without visiting destination pages:
         </p>
 
-        <ol style="font-size: 0.92rem; line-height: 1.8; color: #334155; padding-left: 1.25rem;">
+        <ol style="font-size: 0.92rem; line-height: 1.8; color: var(--body-color); padding-left: 1.25rem;">
             <li><strong>IP Address in Hostname (R1):</strong> Flags raw numerical IPv4, IPv6, or hex/octal representations bypassing standard DNS resolution controls.</li>
             <li><strong>URL Length Analysis (R2):</strong> Catches bloated URLs (&gt; 75 characters) engineered to conceal deceptive subdomains or evade mobile display boundaries.</li>
             <li><strong>URL Shortening Service (R3):</strong> Detects link obfuscation services (e.g., bit.ly, tinyurl) used by threat actors to conceal target destinations.</li>
@@ -62,19 +62,19 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">Machine Learning &amp; Feature Engineering</h3>
         </header>
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.6;">
+        <p style="font-size: 0.92rem; color: var(--body-color); line-height: 1.6;">
             Phishield extracts a 26-dimensional tabular feature vector purely from URL text (character counts, ratios, delimiter frequencies, and Shannon entropy).
         </p>
         <div class="grid" style="margin: 1.25rem 0;">
-            <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.35rem; color: #0f172a;">Baseline Classifier</strong>
+            <div style="background: var(--surface-subtle); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--heading-color);">Baseline Classifier</strong>
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
                     Logistic Regression model trained on tabular features to establish an empirical performance benchmark.
                 </p>
             </div>
-            <div style="background: #f0fdf4; padding: 1.25rem; border-radius: 8px; border: 1px solid #bbf7d0;">
-                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.35rem; color: #166534;">Production Classifier</strong>
-                <p style="font-size: 0.85rem; color: #166534; margin: 0;">
+            <div style="background: var(--safe-bg); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--safe-border);">
+                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--safe-text);">Production Classifier</strong>
+                <p style="font-size: 0.85rem; color: var(--safe-text); margin: 0;">
                     Random Forest ensemble (100 estimators, max depth 15) achieving &gt; 90% precision and recall with sub-millisecond offline inference latency.
                 </p>
             </div>

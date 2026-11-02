@@ -86,7 +86,7 @@
 <!-- Two-Layer Hybrid Decision Framework -->
 <section style="margin: 3.5rem 0;">
     <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; text-align: center;">Two-Layer Explainable Hybrid Architecture</h2>
-    <p style="text-align: center; color: var(--text-muted); max-width: 680px; margin: 0 auto 2rem;">
+    <p style="text-align: center; color: var(--muted-color); max-width: 680px; margin: 0 auto 2rem;">
         Combining deterministic rule-based heuristics with machine learning to eliminate single-model failure modes and automation bias (Parasuraman &amp; Riley, 1997).
     </p>
 
@@ -95,11 +95,11 @@
             <header>
                 <strong style="color: var(--primary);">Layer 1: 13 Structural Heuristics (40% Weight)</strong>
             </header>
-            <p style="font-size: 0.92rem; color: #334155;">
+            <p style="font-size: 0.92rem;">
                 Inspects verified syntactic threat indicators including IP address hostnames, deceptive <code>@</code> delimiters, brand name impersonation, suspicious TLDs, and homoglyph attacks. Every triggered indicator generates an explicit plain-English explanation.
             </p>
             <footer>
-                <small style="color: var(--text-muted);">Grounded in Zhang et al. (2007) &amp; Mohammad et al. (2014)</small>
+                <small style="color: var(--muted-color);">Grounded in Zhang et al. (2007) &amp; Mohammad et al. (2014)</small>
             </footer>
         </article>
 
@@ -107,11 +107,11 @@
             <header>
                 <strong style="color: var(--primary);">Layer 2: Random Forest Classifier (60% Weight)</strong>
             </header>
-            <p style="font-size: 0.92rem; color: #334155;">
+            <p style="font-size: 0.92rem;">
                 Extracts a 26-dimensional tabular numerical feature vector (length, entropy, delimiter frequencies) evaluated through a 100-estimator Random Forest ensemble trained on the PhiUSIIL benchmark (Prasad &amp; Chandra, 2024a).
             </p>
             <footer>
-                <small style="color: var(--text-muted);">Validated against empirical Logistic Regression baseline</small>
+                <small style="color: var(--muted-color);">Validated against empirical Logistic Regression baseline</small>
             </footer>
         </article>
     </div>

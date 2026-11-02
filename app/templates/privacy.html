@@ -10,10 +10,10 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Legal, Social, Ethical &amp; Professional Issues (PPD Section 8)
         </div>
-        <h1 style="font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; color: #0f172a;">
+        <h1 style="font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem;">
             Privacy Policy &amp; Legal Framework
         </h1>
-        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">
+        <p style="color: var(--muted-color); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">
             Formal LSEPI compliance documentation covering UK GDPR, DPA 2018 (amended by DUAA 2025), Computer Misuse Act 1990, and BCS Code of Conduct.
         </p>
     </div>
@@ -23,10 +23,10 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">1. Data Protection &amp; Lawful Basis (UK GDPR / DPA 2018)</h3>
         </header>
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.7; margin-bottom: 1rem;">
+        <p style="font-size: 0.92rem; line-height: 1.7; margin-bottom: 1rem;">
             Under the United Kingdom General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018 (as amended by the Data (Use and Access) Act 2025), personal data is processed strictly under the following lawful principles:
         </p>
-        <ul style="font-size: 0.9rem; color: #334155; line-height: 1.8; padding-left: 1.25rem;">
+        <ul style="font-size: 0.9rem; line-height: 1.8; padding-left: 1.25rem;">
             <li><strong>Lawful Basis (Contract — Art. 6(1)(b)):</strong> Personal data (email address) is processed solely to provide registered users with secure account authentication and private scan history tracking.</li>
             <li><strong>Data Minimisation (Art. 5(1)(c)):</strong> We store only an email address and a non-reversible, salted scrypt cryptographic hash (OWASP recommended parameter N=2<sup>17</sup>). Passwords, real names, and phone numbers are never stored.</li>
             <li><strong>Sensitive Query Parameter Masking:</strong> Web links frequently carry session tokens or reset codes. Phishield automatically sanitizes sensitive parameters (e.g., <code>token</code>, <code>auth</code>, <code>key</code>, <code>email</code>) with <code>***MASKED***</code> prior to database persistence.</li>
@@ -40,7 +40,7 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">2. Advisory Classification &amp; Automated Decisions</h3>
         </header>
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.7; margin: 0;">
+        <p style="font-size: 0.92rem; line-height: 1.7; margin: 0;">
             Phishield outputs are strictly advisory recommendations to support human decision-making. The system takes no automated punitive actions on behalf of the user (such as altering external DNS records or terminating connections). Consequently, the automated decision-making constraints under UK GDPR Articles 22A–22D do not restrict standard platform operation (ICO, 2026b). The final determination to visit or disregard any web resource remains with the human operator.
         </p>
     </article>
@@ -50,10 +50,10 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">3. Computer Misuse Act 1990 &amp; Safety Architecture</h3>
         </header>
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.7; margin-bottom: 0.75rem;">
+        <p style="font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.75rem;">
             In strict compliance with Section 1 of the Computer Misuse Act 1990 (unauthorised access):
         </p>
-        <ul style="font-size: 0.9rem; color: #334155; line-height: 1.8; padding-left: 1.25rem;">
+        <ul style="font-size: 0.9rem; line-height: 1.8; padding-left: 1.25rem;">
             <li><strong>Zero Network Probing:</strong> Phishield performs 100% passive, offline structural text analysis. It never connects to, pings, spiders, or renders any inspected URL.</li>
             <li><strong>SSRF Immunity:</strong> Because links are never fetched over HTTP/HTTPS, the application is fundamentally immune to Server-Side Request Forgery (SSRF) and cannot be coerced into scanning private intranet infrastructure.</li>
             <li><strong>Defanged Text Rendering:</strong> Malicious and suspicious web links are rendered strictly as defanged text (e.g., <code>hxxps[://]domain[.]com</code>) to prevent accidental execution or browser pre-fetching.</li>
@@ -65,7 +65,7 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">4. Intellectual Property &amp; Descriptive Identification</h3>
         </header>
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.7; margin: 0;">
+        <p style="font-size: 0.92rem; line-height: 1.7; margin: 0;">
             Brand impersonation detection checks evaluate textual character sequences against a curated list of high-target brands (e.g. "paypal", "microsoft"). In accordance with UK trademark jurisprudence and fair use in cybersecurity defensive research, brand names are referenced exclusively for descriptive threat mitigation, without incorporating third-party corporate logos or proprietary trade dress.
         </p>
     </article>
@@ -75,10 +75,10 @@
         <header>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">5. Professional Standards &amp; BCS Code of Conduct</h3>
         </header>
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.7; margin-bottom: 0.75rem;">
+        <p style="font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.75rem;">
             The project operates in compliance with the British Computer Society (BCS) Code of Conduct (BCS, 2022):
         </p>
-        <ul style="font-size: 0.9rem; color: #334155; line-height: 1.8; padding-left: 1.25rem;">
+        <ul style="font-size: 0.9rem; line-height: 1.8; padding-left: 1.25rem;">
             <li><strong>Public Interest:</strong> Prioritising user safety and welfare by providing intelligible explanations and directing users to official UK NCSC reporting mechanisms.</li>
             <li><strong>Professional Competence &amp; Integrity:</strong> Grounded in verified research datasets (PhiUSIIL, Tranco), avoiding over-trust through transparent multi-factor scoring (40% heuristic rules, 60% machine learning).</li>
             <li><strong>Accessibility (WCAG 2.2 AA):</strong> Standard semantic HTML and high-contrast typography support users with visual or motor impairments under the Equality Act 2010.</li>

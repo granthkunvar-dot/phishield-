@@ -17,8 +17,8 @@
     <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
             <!-- test-anchor: Inspection Assessment -->
-            <h1 style="font-size: 1.85rem; font-weight: 800; margin: 0; color: #0f172a;">Inspection Assessment</h1>
-            <small style="color: var(--text-muted);">Timestamp: {{ scan_time or 'Just now' }} &bull; Passive Heuristic &amp; Machine Learning Analysis</small>
+            <h1 style="font-size: 1.85rem; font-weight: 800; margin: 0;">Inspection Assessment</h1>
+            <small style="color: var(--muted-color);">Timestamp: {{ scan_time or 'Just now' }} &bull; Passive Heuristic &amp; Machine Learning Analysis</small>
         </div>
         <div>
             <a href="{{ url_for('main.scan') }}" role="button" class="outline" style="padding: 0.4rem 1rem; font-size: 0.88rem;">Inspect Another Link</a>
@@ -81,7 +81,7 @@
             <div class="decision-meter">
                 <div class="decision-meter-fill" style="width: {{ r_rules_score * 100 }}%; background: {% if r_rules_score > 0.6 %}var(--danger-accent){% elif r_rules_score > 0.3 %}var(--warn-accent){% else %}var(--safe-accent){% endif %};"></div>
             </div>
-            <small style="color: var(--text-muted); display: block;">13 transparent deterministic rules grounded in empirical cybersecurity studies.</small>
+            <small style="color: var(--muted-color); display: block;">13 transparent deterministic rules grounded in empirical cybersecurity studies.</small>
         </div>
 
         <div class="decision-card">
@@ -90,9 +90,9 @@
                 <span style="font-weight: 800; font-size: 1.1rem; color: var(--primary);">{{ "%.1f"|format(r_ml_score * 100) }}%</span>
             </div>
             <div class="decision-meter">
-                <div class="decision-meter-fill" style="width: {{ r_ml_score * 100 }}%; background: {% if r_ml_score > 0.6 %}var(--danger-accent){% elif r_ml_score > 0.3 %}var(--warn-accent){% else %}var(--safe-accent){% endif %};"></div>
+                <div class="decision-meter-fill" style="width: {{ r_ml_score * 100 }}%; background: {% if r_ml_score > 0.6 %}#dc2626{% elif r_ml_score > 0.3 %}#d97706{% else %}#059669{% endif %};"></div>
             </div>
-            <small style="color: var(--text-muted); display: block;">Trained on 26 structural URL features using the PhiUSIIL benchmark (Prasad &amp; Chandra, 2024a).</small>
+            <small style="color: var(--muted-color); display: block;">Trained on 26 structural URL features using the PhiUSIIL benchmark (Prasad &amp; Chandra, 2024a).</small>
         </div>
     </div>
 
@@ -117,7 +117,7 @@
                 </thead>
                 <tbody>
                     {% for r in r_breakdown %}
-                    <tr style="{% if r.triggered %}background: #fff1f2;{% endif %}">
+                    <tr style="{% if r.triggered %}background: var(--danger-bg);{% endif %}">
                         <td><strong>{{ r.rule_id }}</strong></td>
                         <td>{{ r.name }}</td>
                         <td>
@@ -127,7 +127,7 @@
                                 <span class="rule-badge clear">Clear</span>
                             {% endif %}
                         </td>
-                        <td style="font-size: 0.88rem; color: {% if r.triggered %}#991b1b{% else %}#475569{% endif %};">
+                        <td style="font-size: 0.88rem; color: {% if r.triggered %}var(--danger-accent){% else %}var(--body-color){% endif %};">
                             {{ r.explanation }}
                         </td>
                     </tr>

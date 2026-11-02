@@ -7,8 +7,8 @@
 
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
         <div>
-            <h1 style="font-size: 2rem; font-weight: 800; margin: 0; color: #0f172a;">Inspection History</h1>
-            <p style="color: var(--text-muted); margin: 0.25rem 0 0; font-size: 0.95rem;">
+            <h1 style="font-size: 2rem; font-weight: 800; margin: 0;">Inspection History</h1>
+            <p style="color: var(--muted-color); margin: 0.25rem 0 0; font-size: 0.95rem;">
                 Private, unprofiled personal inspection archive (retained for 90 days under UK GDPR).
             </p>
         </div>
@@ -38,7 +38,7 @@
             <tbody>
                 {% for s in scans %}
                 <tr>
-                    <td style="font-size: 0.85rem; color: #64748b; white-space: nowrap;">
+                    <td style="font-size: 0.85rem; color: var(--muted-color); white-space: nowrap;">
                         {{ s.scanned_at }}
                     </td>
                     <td>
@@ -67,10 +67,10 @@
         </table>
     </article>
     {% else %}
-    <article style="text-align: center; padding: 3rem 1.5rem; background: #ffffff;">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" style="margin: 0 auto 1rem;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-        <h3 style="font-size: 1.25rem; font-weight: 700; color: #334155; margin-bottom: 0.5rem;">No Inspection Records</h3>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+    <article style="text-align: center; padding: 3rem 1.5rem;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 1rem; color: var(--muted-color);"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">No Inspection Records</h3>
+        <p style="color: var(--muted-color); font-size: 0.95rem; margin-bottom: 1.5rem;">
             You have not inspected any web links yet, or your past records were deleted under automated 90-day retention cleanup.
         </p>
         <a href="{{ url_for('main.scan') }}" role="button">Inspect a Link Now</a>

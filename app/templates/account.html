@@ -6,8 +6,8 @@
 <section style="max-width: 720px; margin: 2rem auto;">
 
     <div style="margin-bottom: 2rem;">
-        <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem; color: #0f172a;">Account Settings</h1>
-        <p style="color: var(--text-muted); margin: 0;">Review your account profile or exercise your UK GDPR data privacy rights.</p>
+        <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;">Account Settings</h1>
+        <p style="color: var(--muted-color); margin: 0;">Review your account profile or exercise your UK GDPR data privacy rights.</p>
     </div>
 
     <!-- Profile Info Card -->
@@ -17,22 +17,22 @@
         </header>
         <div class="grid">
             <div>
-                <small style="color: var(--text-muted); display: block; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.25rem;">Registered Email</small>
+                <small style="color: var(--muted-color); display: block; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.25rem;">Registered Email</small>
                 <strong style="font-size: 0.95rem; word-break: break-all;">{{ user.email }}</strong>
             </div>
             <div>
-                <small style="color: var(--text-muted); display: block; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.25rem;">Member Since</small>
+                <small style="color: var(--muted-color); display: block; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.25rem;">Member Since</small>
                 <span style="font-size: 0.95rem;">{{ user.created_at }}</span>
             </div>
             <div>
-                <small style="color: var(--text-muted); display: block; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.25rem;">Total Scans Performed</small>
+                <small style="color: var(--muted-color); display: block; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.25rem;">Total Scans Performed</small>
                 <strong style="font-size: 1.3rem; color: var(--primary);">{{ scan_count }}</strong>
             </div>
         </div>
     </article>
 
     <!-- UK GDPR Article 17: Right to Erasure -->
-    <article style="border: 2px solid var(--danger-border); background: #ffffff;">
+    <article style="border: 2px solid var(--danger-border);">
         <header style="background: var(--danger-bg); border-bottom: 1px solid var(--danger-border); margin: -1.5rem -1.5rem 1.25rem; padding: 1rem 1.5rem;">
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--danger-text);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: middle; margin-right: 0.4rem;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -40,7 +40,7 @@
             </h3>
         </header>
 
-        <p style="font-size: 0.92rem; color: #334155; line-height: 1.6; margin-bottom: 1.25rem;">
+        <p style="font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.25rem;">
             Deleting your account will permanently remove your user credentials, your full scan history, and any submitted feedback reports from the Phishield SQLite database. <strong>This action is irreversible.</strong>
         </p>
 
