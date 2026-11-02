@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Sign In | Phishield{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card anim">
+        <div class="auth-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect width="16" height="11" x="4" y="11" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        </div>
+        <h2>Sign in to Phishield</h2>
+        <p class="auth-card__sub">Access your inspection history and audit log.</p>
+
+        <form action="{{ url_for('auth.login') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autocomplete="username" autofocus placeholder="your username">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;margin-top:.5rem;">Sign In</button>
+        </form>
+
+        <p style="margin-top:1.25rem;text-align:center;font-size:.88rem;color:var(--ink-3);">
+            No account? <a href="{{ url_for('auth.register') }}" style="color:var(--blue);font-weight:600;">Register free</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

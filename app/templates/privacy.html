@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy &amp; LSEPI Disclosures | Phishield{% endblock %}
+
+{% block content %}
+<div style="padding-top: 6rem; padding-bottom: 5rem;">
+<div class="wrap" style="max-width: 900px;">
+
+    <!-- Page header -->
+    <div class="anim" style="margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--line);">
+        <p class="eyebrow"><span>Legal &amp; Compliance</span></p>
+        <h1 style="font-size: clamp(2.2rem,5vw,3.2rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.1; margin: 0.6rem 0 1rem;">
+            Privacy Policy &amp; <em style="font-family: var(--f-serif); font-style: italic; color: var(--blue); font-weight: 400;">Legal Framework</em>
+        </h1>
+        <p class="lede" style="max-width: 640px; margin: 0;">
+            Comprehensive LSEPI disclosure covering UK GDPR, DPA 2018 (amended by DUAA 2025), Computer Misuse Act 1990, and BCS Code of Conduct compliance.
+        </p>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="breakdown-panel anim anim-d1" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">1. Data Protection &amp; Lawful Basis (UK GDPR / DPA 2018)</h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0 0 1rem; line-height: 1.7;">
+            Under the United Kingdom General Data Protection Regulation (UK GDPR) and Data Protection Act 2018 (as amended by the Data (Use and Access) Act 2025), personal data is processed strictly under the following lawful bases:
+        </p>
+        <ul style="font-size: 0.9rem; color: var(--ink-2); margin: 0; padding-left: 1.5rem; line-height: 2;">
+            <li><strong>Lawful Basis (Contract — Art. 6(1)(b)):</strong> To provide registered users with secure account authentication, private scan history tracking, and security alert management.</li>
+            <li><strong>Data Minimisation (Art. 5(1)(c)):</strong> We only store a user's email address and a salted, non-reversible scrypt cryptographic hash. No names, phone numbers, or unhashed passwords are ever gathered.</li>
+            <li><strong>Query Parameter Masking:</strong> Web addresses frequently carry personal tokens or session IDs. Phishield automatically sanitizes and masks sensitive parameters (e.g., <code>token</code>, <code>email</code>, <code>key</code>, <code>auth</code>) with <code>***MASKED***</code> prior to persistent storage.</li>
+            <li><strong>Storage Limitation (Art. 5(1)(e)):</strong> Scan histories older than 90 days are automatically deleted during routine database clean-up.</li>
+            <li><strong>Right to Erasure (Art. 17):</strong> Users maintain complete authority to delete individual scan items or permanently erase their entire account and all associated historical records via the Account Settings interface.</li>
+        </ul>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="breakdown-panel anim anim-d2" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">2. Advisory Classification &amp; Automated Decisions</h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0; line-height: 1.7;">
+            Phishield outputs are strictly advisory recommendations. The platform does not take automated actions on behalf of the user (such as blocking network connections or modifying external records). Consequently, the automated decision-making constraints under UK GDPR Articles 22A–22D do not restrict standard usage (ICO, 2026b). The final determination to visit or disregard any web resource remains with the human operator.
+        </p>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="breakdown-panel anim anim-d3" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">3. Computer Misuse Act 1990 &amp; Safety Architecture</h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0 0 0.75rem; line-height: 1.7;">
+            In strict compliance with Section 1 of the Computer Misuse Act 1990 (unauthorised access):
+        </p>
+        <ul style="font-size: 0.9rem; color: var(--ink-2); margin: 0; padding-left: 1.5rem; line-height: 2;">
+            <li><strong>No Network Probing:</strong> Phishield performs 100% passive, offline structural text analysis. It never connects to, pings, spiders, or renders any inspected URL.</li>
+            <li><strong>SSRF Prevention:</strong> Because links are never retrieved over HTTP/HTTPS, the application is fundamentally immune to Server-Side Request Forgery (SSRF) and cannot be tricked into scanning internal private intranets.</li>
+            <li><strong>Defanged Display:</strong> Malicious and suspicious web links are rendered in defanged formatting (e.g., <code>hxxps[://]domain[.]com</code>) to prevent accidental execution or browser pre-fetching.</li>
+        </ul>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="breakdown-panel anim anim-d4" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">4. Intellectual Property &amp; Neutrality</h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0; line-height: 1.7;">
+            Brand impersonation detection checks evaluate textual character sequences against a curated list of high-target brands (e.g. "paypal", "microsoft"). In accordance with UK trademark jurisprudence, brand names are referenced exclusively for descriptive security identification and threat mitigation, without incorporating third-party corporate logos or proprietary trade dress.
+        </p>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="breakdown-panel anim anim-d5">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">5. Professional Standards &amp; BCS Code of Conduct</h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0 0 0.75rem; line-height: 1.7;">
+            The project operates under the British Computer Society (BCS) Code of Conduct (BCS, 2022):
+        </p>
+        <ul style="font-size: 0.9rem; color: var(--ink-2); margin: 0; padding-left: 1.5rem; line-height: 2;">
+            <li><strong>Public Interest:</strong> Prioritising user safety and welfare by providing clear, intelligible security reasons and directing users to official UK NCSC reporting mechanisms.</li>
+            <li><strong>Professional Competence &amp; Integrity:</strong> Grounded in verified research datasets (PhiUSIIL, Tranco), avoiding over-trust through transparent multi-factor scoring (40% heuristic rules, 60% machine learning).</li>
+        </ul>
+    </div>
+
+</div>
+</div>
+{% endblock %}

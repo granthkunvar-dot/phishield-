@@ -1,0 +1,102 @@
+{
+  "training_date": "2026-11-01 14:38:51",
+  "dataset": {
+    "train_samples": 4000,
+    "test_samples": 1000,
+    "feature_count": 26,
+    "features": [
+      "length_url",
+      "length_hostname",
+      "length_path",
+      "length_query",
+      "count_dots",
+      "count_hyphens",
+      "count_underscores",
+      "count_slashes",
+      "count_question_marks",
+      "count_equals",
+      "count_ats",
+      "count_percent",
+      "count_digits",
+      "count_letters",
+      "ratio_digits_url",
+      "ratio_digits_host",
+      "entropy_url",
+      "entropy_host",
+      "has_ip",
+      "has_shortener",
+      "has_brand_keyword",
+      "has_suspicious_tld",
+      "count_subdomains",
+      "has_https_in_host",
+      "has_double_slash_path",
+      "is_https"
+    ]
+  },
+  "baseline_logistic_regression": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0,
+    "training_time_sec": 0.588
+  },
+  "random_forest": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0,
+    "avg_latency_ms": 0.059,
+    "training_time_sec": 0.185,
+    "confusion_matrix": {
+      "true_negative": 475,
+      "false_positive": 0,
+      "false_negative": 0,
+      "true_positive": 525
+    },
+    "top_features": [
+      {
+        "feature": "is_https",
+        "importance": 0.1379
+      },
+      {
+        "feature": "ratio_digits_url",
+        "importance": 0.1141
+      },
+      {
+        "feature": "entropy_host",
+        "importance": 0.0906
+      },
+      {
+        "feature": "has_shortener",
+        "importance": 0.0767
+      },
+      {
+        "feature": "length_hostname",
+        "importance": 0.0729
+      },
+      {
+        "feature": "length_query",
+        "importance": 0.0686
+      },
+      {
+        "feature": "count_digits",
+        "importance": 0.0634
+      },
+      {
+        "feature": "length_path",
+        "importance": 0.0489
+      },
+      {
+        "feature": "count_underscores",
+        "importance": 0.0471
+      },
+      {
+        "feature": "length_url",
+        "importance": 0.0394
+      }
+    ]
+  },
+  "meets_objective_o2": true
+}

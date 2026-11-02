@@ -1,0 +1,398 @@
+Introduction
+Overview. One convincing link is often all an attacker needs. Phishing is the most common and disruptive attack on UK organisations: 43% of businesses identified a breach in the past year, and 85% of those experienced phishing (DSIT, 2025). The APWG recorded 971,181 attacks in the first quarter of 2026 alone, up by 13.8% (APWG, 2026). Phishield is a website which provides a three-level rating on detected URLs with simple explanations from URL rules without ever visiting the link.
+Context, Problem and Research Gap. Phishing is now sold as a service: the Tycoon 2FA kit accounted for roughly 62% of it blocked by Microsoft by mid-2025, until 330 of its domains were seized (Microsoft, 2026), and AI-enabled kits such as EvilTokens select their own victims (Lyons, 2026). Links carried 78% of 8.3 billion email threats in Q1 2026 (Microsoft Threat Intelligence, 2026). The sources however conflicts as machine learning reportedly reaches 95-98% on static data, yet detection weakens as tactics evolve, and humans make the final decision. No approach is accurate on unseen URLs, safe because it never opens them, and intelligible to non-experts. Phishield addresses the issue as tested on fresh URLs, shows how URL-only detection performs today and why linkless ‘zero-click’ attacks remain a stated limitation (NCSC, 2026).
+Background Literature Review (Table 1): The matrix defines the gap.
+Source
+Key findings
+Limitations
+Relevance to project
+Sheng et al. (2009)
+Blacklists caught under 20% of new phishing sites at ‘hour zero’
+Reactive and new domains missed
+Must judge unseen links
+Zhang, Hong and Cranor (2007) and Mohammad, Thabtah and McCluskey (2014)
+Heuristic rules detect unseen sites transparently
+Hand-tuned and attackers adapt
+Basis of the 13 URL rules
+Sahingoz et al. (2019) and Akpan et al. (2025)
+97.98% from URL text (Random Forest); 95.43% for a tuned SVM on emails
+Static data and no explanation
+Classic models suffice and URL-only is safe
+Prasad and Chandra (2024a)
+Open benchmark of 235,795 labelled URLs
+Tactics drift (Gama et al., 2014)
+Training data and fresh-URL test needed
+Lundberg and Lee (2017) and Miller (2019)
+Per-prediction reasons (SHAP) and good explanations are simple
+Feature scores too technical for lay users
+Simple explanations in English
+Dhamija, Tygar and Hearst (2006), Broadhurst et al. (2020) and Spicer and Nurse (2026)
+Best fake fooled 90%, new and international students most at risk and many causes
+Training alone has limited effect
+Assistance given when the decision is being made
+Aims and Objectives
+Aim
+To design, implement, evaluate a website that detects phishing URLs by combining rule-based, machine-learning techniques and explains its results clearly to non-technical users as well. 
+Research question: Can URL rules combined with a Random Forest on URL-only features reach at least 0.90 phishing precision and recall on unseen URLs, with reasons non-experts can follow?
+SMART objectives
+ID
+Specific objective
+Measurable and achievable criteria
+O1
+Critically review sources on phishing detection and explainable ML, obtain and profile a raw-URL dataset of labelled URLs.
+Literature review draft, profile of class balance, duplicates and domain overlap.
+O2
+Specify requirements and design the system (architecture & data model) and train & compare models on URL-only features.
+Chosen model reaches at least 90% accuracy, at least 0.90 precision and recall for phishing on a 20% held-out test set under seconds.
+O3
+Implement the website with secure registration, login and URL scanning with explanations & history.
+All ‘Must have’ requirements considered and each result will show simple explanations in English with median response in seconds.
+O4
+Test and evaluate a pytest unit and integration tests, a ZAP scan of the site and model evaluation including fresh URLs.
+At least 80% statement coverage, zero High-risk ZAP alerts, precision, recall and confusion matrix on the test set and on recent URLs.
+O5
+Complete the final report and deliver a live demonstration.
+Reporting covering all required chapters submitted on time and mock demo with the supervisor at least one week before.
+Table 2. SMART objectives: Relevant to the course and aim.
+Critical evaluation of key needs
+Users need reasons at the moment they decide, as training alone has limited effect (Spicer and Nurse, 2026) (O3); the tool must be safe, never visiting links (O3, O4); and claims must hold on unseen data, prioritising recall, as a missed phishing link costs more than a false alarm (O4).
+Exploration. I have explored ideas in depth by comparing sources and their limits (Table 1) and justifying each tool with an alternative (Tables 5 and 6); measured tests and reflections in a research log continue it.
+Tasks and Deliverables
+Table 3 covers the full cycle: Planning (0.x), Research (1.x), Design (2.x), Implementation (3.x) in Agile sprints, Testing and evaluation (4.x) and Dissertation (5.x), with dependencies, deliverables (D) and milestones (◆).
+ID
+Task
+Depends
+Deliverable & Milestone(◆)
+0.1
+Register project and agree scope 
+-
+Approved registration
+0.2
+Ethics declaration and RP1 form
+0.1
+D1 forms ◆M1 RP1; before the PPD
+0.3
+Write Project Planning Document
+0.1
+D2 PPD ◆M2
+1.1
+Literature review
+0.1
+D3 Literature review draft
+1.2
+Dataset acquisition and exploratory analysis
+0.2
+D4 Clean dataset ◆M3 O1 done
+1.3
+Requirements specification (MoSCoW)
+1.1
+Requirements specification
+2.1
+System design (architecture, schema and interface)
+1.3
+D5 Design document
+2.2
+Feature extraction and rule engine
+1.2
+Rule and feature module
+2.3
+Train and compare models (baseline vs RF)
+2.2
+D6 Model ◆M4 O2 done
+3.1
+Sprint 1: Flask, authentication and SQLite
+2.1
+Increment 1
+3.2
+Sprint 2: Scan pipeline and explanations
+2.3, 3.1
+Increment 2 ◆M5 RP2
+3.3
+Sprint 3: History, interface and accessibility
+3.2
+D7 Website ◆M6 O3 done
+4.1
+Unit and integration tests (during sprints)
+3.1
+Test Suite and coverage report
+4.2
+ZAP scans and fixes
+3.3
+D8 Security report
+4.3
+Model evaluation on test set and fresh URLs
+2.3
+Results ◆M7 O4 done
+4.4
+Usability study (SUS)
+0.2, 3.3
+Usability results
+5.1
+Write report chapters (incrementally)
+1.1, 4.x
+D9 Project Thesis ◆M8 ◆M9
+5.2
+Demo preparation and mock demo
+3.3, 4.2
+D10 Demonstration ◆M10 ◆M11
+Table 3. Work breakdown of the entire project.
+Scope
+Functionality and deliverables
+Must (in, MVP)
+URL validation, 13 URL rules, ML classifier or technique, three-level rating, simple explanations in English, login with scrypt hashing, lockout and CSRF tokens, SQLite history with delete, tests, ZAP scans and report & demo.
+Should (in)
+Fresh-URL evaluation, SUS usability study and WCAG 2.2 AA checks.
+Could
+SHAP feature explanations, comparison with Google Safe Browsing and free cloud deployment.
+Won’t (out)
+Visiting or rendering pages (safety and law), browser extension, mobile application, email scanning, deep learning. Out-of-scope deliverables: production hosting, user manual and maintenance.
+Table 4. Functionality and deliverables in and out of scope (MoSCoW).
+Expected outcomes: a tested website, an evaluated model, the project thesis and a live demonstration. Each sprint ends with a retrospective to review progress and updates.
+Gantt Chart
+The following representation shows tasks and milestones across six phases, from planning & approval to the project thesis and demonstration, with each task’s dependencies, timeline allocations (Start & End), and a few milestone dates to be confirmed. It also plots other module deadlines, university breaks & contingency weeks, so FYP work is lighter in peak weeks, and a slip can be tracked and re-planned without moving the critical path.
+Figure 1. Gantt Chart of the Final Year Project Module.
+Resources
+Every resource is free, removing cost as a risk.
+Resource
+Purpose and justification
+Alternative considered
+Source / Cost
+MacBook Air M5
+Development, training and local hosting for the demo and no GPU needed.
+Cloud notebooks: need internet for the demo
+Personal equipment with zero cost
+Python and Flask (Jinja2, Werkzeug)
+Small back end, auto-escaping templates stop XSS and scrypt hashing at OWASP’s N= 217.
+Django: heavier for pages
+Open source
+Scikit-learn, pandas and joblib
+Train, compare and save the LR and RF models on tabular URL features.
+TensorFlow: unnecessary for tabular data
+Open source
+SQLite and Pico CSS (stored locally)
+Serverless database, so the demo cannot fail on a connection and accessible styling with no JavaScript under a strict CSP
+PostgreSQL: needs a server and Bootstrap: heavier
+Standard library
+VS Code, pytest, pytest-cov, ZAP and TablePlus
+Editing, tests, coverage, security scanning, inspecting stored data and managing references.
+Burp Suite Pro: paid
+Free
+iCloud
+Off-site backup and evidence of progress.
+MEGA: inefficient for Apple ecosystem
+Free
+PhiUSIIL, Tranco and OpenPhish
+Labelled training URLs (Prasad and Chandra, 2024b), legitimate and fresh phishing URLs for the drift test and stored as text only.
+PhishTank: new registrations disabled
+Free
+Supervisor & lecturers
+Guidance at meetings and review points, feedback on drafts and SUS study regarding ethics.
+-
+Meetings & Office hours
+Table 5. Resources, alternatives and justifications.
+Information source
+Use in the project
+Critical evaluation
+NTU OneSearch, IEEE Xplore, ACM DL, ScienceDirect and Google Scholar
+Literature for O1, found with strings such as (“phishing detection” OR “malicious URL”) AND (“machine learning” OR explainable), plus citation chaining
+Peer-reviewed and rigorous but lags behind attackers and dataset age is checked for every study
+DSIT, NCSC, ICO and GOV.UK
+UK statistics, legal, security and reporting guidance
+Authoritative, survey data are self-reported and UK-only
+APWG, Microsoft Threat Intelligence, Cisco Talos, Netcraft, Spamhaus, Shadowserver, FIRST and M3AAWG
+Current tactics and trends, ideas for rules and fresh test URLs
+Large telemetry but not peer-reviewed and definitions differ (APWG counts unique sites & Microsoft counts emails) so figures are never compared directly
+Vendor and trade press (Hoxhunt, Malwarebytes & The Register)
+Early warning of new threats such as AI lures
+Possible commercial bias and used only when named data or a primary source is given
+OWASP Top 10:2025, ASVS 5.0, WCAG 2.2, BCS Code, Flask, scikit-learn and Pico documentation
+Requirements, test criteria & correct and secure use of each tool
+Authoritative standards and versions recorded
+Table 6. Sources of information and how far each can be trusted.
+6. Risks and Mitigations
+Risks are grouped into types and have causes, preventive actions and recovery plans.
+Risk (type)
+Cause
+L
+I
+Score
+Prevent & Recover
+R1 Dataset unsuitable or leaky (technical)
+Duplicate sites across splits and stale URLs
+3
+4
+12
+P: Split by website and remove duplicates (task 1.2) to prevent leakage (Kaufman et al., 2012). R: Add Tranco and OpenPhish data or switch dataset.
+R2 Model misses targets on new URLs (outcome)
+Overfitting and tactics change (cloaking, AI-written lures)
+3
+4
+12
+P: Baseline vs Random Forest and fresh-URL test for drift (Gama et al., 2014). R: Rules work alone and reporting the limitations.
+R3 Scope (practical)
+Deliberation to add page analysis
+4
+3
+12
+P: MoSCoW ‘Won’t list’ and changes agreed with supervisor. R: Drop ‘Could’ items first.
+R4 Clash with other modules (practical)
+Different time stamps for several other courseworks
+4
+3
+12
+P: All deadlines on the Gantt and lighter FYP load in peaks with buffer weeks. R: Re-plan the sprint and protect the critical path.
+R5 Vulnerability in Phishield (technical)
+XSS via URLs, SQL injection and SSRF
+3
+4
+12
+P: Auto-escaping, parameterized SQL, CSRF tokens, login lockout and never fetch URLs. R: ZAP scans and fix High findings first.
+R6 Loss of work (practical)
+Hardware failure or theft
+2
+5
+10
+P: Regular push to the device and report on iCloud Drive. R: Restore on a distinct device or One Drive within a day.
+R7 Users over-trust results (outcome)
+‘Safe’ read as a guarantee
+3
+3
+9
+P: Cautious wording against automation bias (Parasuraman and Riley, 1997) and usability test. R: Reword and redesign after testing.
+R8 Skills gap (technical)
+New libraries (Flask security, Machine Learning)
+3
+3
+9
+P: Early prototypes in tasks 2.2 and 3.1. R: The site already runs on rules alone.
+R9 Illness or personal issues (practical)
+Unforeseen events
+2
+4
+8
+P: Buffer weeks. R: Communicate with the supervisor and re-plan sprints.
+R10 Demo fails (practical)
+Laptop fault, network issues and technical issues
+2
+3
+6
+P: Backup on a different device. R: Several pre-trial tests and a mock demonstration.
+R11 Data feed access lost (practical)
+OpenPhish academic access lasts for a couple of months
+2
+3
+6
+P: Download the minimum days archive early (OpenPhish, 2026). R: Test on the held-out PhiUSIIL set and Tranco instead.
+R12 Ethics approval delayed (outcome)
+Study involves people
+2
+2
+4
+P: Submit with RP1. R: Heuristic evaluation with no participants.
+Table 7. Risk register (Green = Low, Orange = Medium) with rating for likelihood (L) and impact (I) from 1 to 5. Score = L * I: 1-6 low, 7-12 medium, 13+ high.
+Stakeholders and constraints. The stakeholders are me as developer and author, my supervisor and second marker, end users, and any participants in an optional study whose data I would hold. The main constraints are time (one year alongside four other modules), laptop-only computing resources and reliance solely on test data. Risks R3, R4 and R8 arise from it whereas five risks scoring 12 are reviewed regularly. Risks R1, R2 and R5 weaken the core results so their mitigations are embedded within tasks 1.2, 2.3 and 4.2.
+7. Career Aspirations
+As a Cyber Security student, I will aim for a graduate role in security operations or application security, starting with such as a SOC analyst and building towards security engineering. I chose this path as I enjoy understanding how attacks such as Phishing actually work and Phishield showed me that I find detecting and preventing them more rewarding than building system software alone. Phishield focuses on security, secure software engineering and applied machine learning, so its outcomes give specific evidence for several graduate routes where certain security skills are valued (Table 8).
+Project outcome
+Skill or knowledge gained 
+Graduate roles it supports
+Rule engine, threat feeds and false positive vs false negative analysis
+Phishing indicators, threat intelligence and alert-triage judgement
+SOC Analyst and Threat Intelligence Analyst
+Secure login, CSRF protection and ZAP scan & fixes
+OWASP Top 10:2025, secure coding and vulnerability fixing
+Application Security Engineer and Junior Penetration Tester
+ Website with a database, tests and security
+Full-stack Python, testing and Agile methodology
+DevSecOps and security-based software developer
+Model comparison, leakage control & simple results
+Applied ML, evaluation and providing results to users
+Detection Engineer and Security Data Analyst
+LSEPI analysis, privacy by design & route reporting
+UK GDPR, Computer Misuse Act and BCS Code in practice
+GRC and Data Protection Analyst
+Plan, risk register, report and demo
+Project management, writing for non-experts and presentation
+Cyber Security Graduate Schemes (all routes)
+Table 8. Links between project outcomes and employability.
+Reading threat reports from the APWG, Microsoft and Cisco Talos for the project’s literature review builds the threat-intelligence literacy that security operations roles expect. Organisations such as these, and the NCSC, are examples of employers whose work the project mirrors. I can publish the finished code and a short write-up as a portfolio repository, giving interviewers a concrete security tool I can demonstrate and discuss. Alongside the project, I plan to apply for graduate schemes, study for certified designations and I also plan to keep practising hands-on skills through various platforms. The project also fills gaps in my current profile, particularly in limited hands-on experience of securely testing a live framework and applying secure machine learning to a real detection problem. By the demonstration, I aim to explain with my own evidence how to build, attack-test and evaluate a security tool.
+8. Legal, Social, Ethical and Professional Issues
+People will use Phishield to decide whether to trust a link and its LSEPIs shape the design. Table 9 shows LSEPIs and 8.1 & 8.2 analyse them against the BCS Code of Conduct (BCS, 2022).
+Area
+Outcomes: the website
+Process: doing the project
+What I do about it
+Legal
+UK GDPR and DPA 2018 (amended by the DUAA 2025): accounts, histories, data in URLs, FOI and trademarks
+Computer Misuse Act 1990, dataset & feed licences and copyright
+Minimise, mask, deletion, privacy, never visit URLs and follow licences
+Social
+Harm from missed or false alarms (welfare), surveillance, exclusion and digital divide
+Effect on study volunteers
+Cautious wording, ‘Report a wrong result’, private histories, WCAG 2.2 AA, free and light tool
+Ethical
+Over-trust, uneven protection and dual use
+Informed consent, safeguarding vulnerable users, health and safety and live phishing links
+Explain ratings, measure bias, hide thresholds, consent, anonymity and risk assessment
+Professional
+Secure and accessible software
+Competence, integrity, records and declared AI use
+OWASP and ASVS tests, honest evaluation, minute meetings and GenAI form
+Table 9. LSEPI summary for the outcomes and the process of the project.
+8.1 LSEPIs relating to the project outcomes
+Legal. One phishing email can become a personal-data breach; in an ICO case it exposed HR data on up to 113,000 people (ICO, 2025). Accounts, histories and links (which can hold an email address or reset token) are personal data under the UK GDPR and the Data Protection Act 2018, as amended by the Data (Use and Access) Act 2025. Phishield applies the data protection principles (ICO, 2026a): minimisation (only an email and a salted scrypt hash are stored, and query values are masked), storage limitation (a daily clean-up deletes scans older than 90 days), security (parameterised SQL, CSRF tokens, lockout after five failed logins, database excluded from Git) and user rights (deleting an account removes all its data). The privacy page states the lawful basis (contract). Results are advisory, so the automated decision-making rules (UK GDPR Articles 22A-22D) do not apply (ICO, 2026b). Brand checks use names, never logos, avoiding trademark and copyright issues. Under the Freedom of Information Act 2000 the university’s project records could be requested, so they hold no confidential third-party data.
+Social. Phishield affects users at home where older relatives are frequent targets, at work where masking stops internal tokens from being stored and in education where first-year and international students are deceived more often (Broadhurst et al., 2020). A false negative could cause financial and emotional harm, a welfare issue, so ‘Safe’ is worded as ‘no warning signs found’, never a guarantee. A false positive could harm a legitimate business, so every result has a ‘Report a wrong result’ button. Private, unprofiled histories prevent surveillance. Simple explanations in English help non-native users, and WCAG 2.2 AA (W3C, 2024) supports reasonable adjustments under the Equality Act 2010. Training data are mainly in English, so weaker protection elsewhere will be measured and reported. Being free and light, Phishield does not widen the digital divide.
+Ethical. Uneven training data could give some groups less protection (Mehrabi et al., 2022), so bias is part of the evaluation. There is a dual-use risk: phishing kits already sell anti-detection features (Microsoft Threat Intelligence and Microsoft Digital Crimes Unit, 2026), and precise explanations could teach evasion (Biggio and Roli, 2018), so Phishield names each warning sign without exposing thresholds or model weights. Explanations come from fixed templates, not a language model, so hidden instructions cannot steer them, a risk now seen with AI email assistants (Arntz, 2026). Malicious links are shown only as non-clickable ‘defanged’ text, and each result explains how ratings are made (13 rules weighted 40%, the model 60%), supporting informed rather than blind trust (Parasuraman and Riley, 1997).
+Professional. The BCS Code requires regard for the public interest (privacy, security & wellbeing), addressed above, and competence and integrity, so evaluation is honest: the test set is never used for tuning, seeds are fixed, and limitations are reported. The work follows professional standards: OWASP Top 10:2025 (OWASP Foundation, 2025b), notably A01 access control (users see only their own history), A03 supply chain (recorded dependencies, pinned Pico CSS), A05 injection (parameterised SQL) and A08 integrity (only the project’s own model file is loaded); ASVS 5.0 Level 1 tests (OWASP Foundation, 2025a); PEP 8 and WCAG 2.2.
+8.2 LSEPIs relating to the process of carrying out the project
+Legal. Unauthorised access is an offence under the Computer Misuse Act 1990, and UK police now arrest phishing-kit operators (Lyons, 2026). Phishield never visits or probes any URL, which also prevents server-side request forgery, and ZAP scans only my own local copy. Licences are respected: PhiUSIIL is attributed as CC BY 4.0 requires (Prasad and Chandra, 2024b); OpenPhish academic data are cited with the access date, used non-commercially and never shared with third parties (OpenPhish, 2026), so raw feed data stay out of the public repository, and library licences and adapted code are credited.
+Social and ethical: Will the research affect people? The core project uses public data and no participants, so it does not affect people directly. The exception is an optional usability study with 5 to 8 adult student volunteers, who give informed consent, may withdraw at any time, and complete an anonymous System Usability Scale questionnaire (Brooke, 1996) using only harmless example links; responses are deleted after marking. No children or vulnerable adults take part, so DBS safeguarding checks are not needed.
+Health, safety and risk assessment. Three hazards are controlled: screen strain (breaks, posture), opening a live phishing link (feeds stored as plain text, never opened) and exposure of participant data (anonymity, deletion).
+Professional. I keep the BCS duty to the relevant authority (regulations, ethics procedures & referencing), and minute meetings and version-control all work. Generative AI is used only as NTU’s traffic-light system allows (e.g. grammar checks), never to write the plan or report; sources are verified, and all use is declared on the GenAI acknowledgement form submitted with the PPD.
+8.3 Ethics route
+After discussing the methodology, LSEPIs and GDPR data security with my supervisor, I submit the Ethical Issues Declaration Form on the FYP website with the RP1 form before this PPD. No data collection or practical work starts before supervisor approval (task 1.2 depends on it); starting without it is an academic offence. The core work is expected to be low risk; the usability study waits for the ethics approval, with a heuristic evaluation (Nielsen, 1994) as the fallback for O4.
+8.4 Responsible reporting and sustainability
+Results point users to official routes: emails to report@phishing.gov.uk (investigated by the NCSC), texts to 7726 and losses to Report Fraud (GOV.UK, 2024). Links are never reported automatically, as false alarms could harm legitimate sites, and GPU-free models keep energy use low.
+References
+Akpan, E. et al., 2025. Email phishing detection using machine learning approaches. In: Intelligent systems with applications in communications, computing and IoT (ICISCCI 2024). Lecture Notes of the Institute for Computer Sciences, Social Informatics and Telecommunications Engineering. Cham: Springer, 2025, pp. 70-85.
+APWG, 2026. Phishing activity trends report, 1st quarter 2026 [online]. APWG. Available at: https://docs.apwg.org/reports/apwg_trends_report_q1_2026.pdf [Accessed 15 October 2026].
+Arntz, P., 2026. Phishing emails are baiting your AI assistant [online]. Malwarebytes. Available at: https://www.malwarebytes.com/blog/ai/2026/10/phishing-emails-are-baiting-your-ai-assistant [Accessed 15 October 2026].
+BCS, 2022. BCS Code of Conduct [online]. Swindon: BCS, The Chartered Institute for IT. Available at: https://www.bcs.org/membership/become-a-member/bcs-code-of-conduct/ [Accessed 19 October 2026].
+Biggio, B. and Roli, F., 2018. Wild patterns: ten years after the rise of adversarial machine learning. Pattern Recognition, 84, pp. 317-331.
+Broadhurst, R. et al., 2020. Phishing and cybercrime risks in a university student community [online]. Report to the Criminology Research Advisory Council, CRG 51/16-17. Canberra: Australian Institute of Criminology. Available at: https://www.aic.gov.au/sites/default/files/2020-05/CRG-phishing-risks-v8-060220.pdf [Accessed 15 October 2026].
+Brooke, J., 1996. SUS: a ‘quick and dirty’ usability scale. In: P.W. Jordan et al., eds. Usability evaluation in industry. London: Taylor & Francis, 1996, pp. 189-194.
+Computer Misuse Act 1990, c. 18 [online]. The National Archives. Available at: https://www.legislation.gov.uk/ukpga/1990/18 [Accessed 19 October 2026].
+Data Protection Act 2018, c. 12 [online]. The National Archives. Available at: https://www.legislation.gov.uk/ukpga/2018/12 [Accessed 19 October 2026].
+Data (Use and Access) Act 2025, c. 18 [online]. The National Archives. Available at: https://www.legislation.gov.uk/ukpga/2025/18 [Accessed 19 October 2026].
+Dhamija, R., Tygar, J.D. and Hearst, M., 2006. Why phishing works. In: Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (CHI ‘06). New York: ACM, 2006, pp. 581-590.
+DSIT, 2025. Cyber security breaches survey 2025 [online]. Department for Science, Innovation and Technology. Available at: https://www.gov.uk/government/statistics/cyber-security-breaches-survey-2025 [Accessed 19 October 2026].
+Equality Act 2010, c. 15 [online]. The National Archives. Available at: https://www.legislation.gov.uk/ukpga/2010/15[Accessed 19 October 2026].
+Freedom of Information Act 2000, c. 36 [online]. The National Archives. Available at: https://www.legislation.gov.uk/ukpga/2000/36 [Accessed 19 October 2026].
+Gama, J. et al., 2014. A survey on concept drift adaptation. ACM Computing Surveys, 46 (4), pp. 1-37.
+GOV.UK, 2024. Avoid and report internet scams and phishing [online]. Government Digital Service. Available at: https://www.gov.uk/report-suspicious-emails-websites-phishing [Accessed 15 October 2026].
+ICO, 2025. Learning from the mistakes of others – a retrospective review: phishing [online]. Information Commissioner’s Office. Available at: https://ico.org.uk/about-the-ico/research-reports-impact-and-evaluation/research-and-reports/learning-from-the-mistakes-of-others-a-retrospective-review/phishing/ [Accessed 15 October 2026].
+ICO, 2026a. A guide to the data protection principles [online]. Information Commissioner’s Office. Available at: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/ [Accessed 19 October 2026].
+ICO, 2026b. Automated decision-making, including profiling [online]. Draft guidance. Information Commissioner’s Office. Available at: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making-and-profiling/ [Accessed 19 October 2026].
+Kaufman, S. et al., 2012. Leakage in data mining: formulation, detection, and avoidance. ACM Transactions on Knowledge Discovery from Data, 6 (4), pp. 1-21.
+Lundberg, S.M. and Lee, S.-I., 2017. A unified approach to interpreting model predictions. In: Advances in Neural Information Processing Systems 30 (NIPS 2017). Red Hook, NY: Curran Associates, 2017, pp. 4765-4774.
+Lyons, J., 2026. UK cops arrest 2 EvilTokens suspects, Microsoft seizes 50 phishing kit websites [online]. The Register. Available at: https://www.theregister.com/security/2026/09/22/uk-cops-arrest-2-eviltokens-suspects-microsoft-seizes-50-phishing-kit-websites/5298317 [Accessed 15 October 2026].
+Mehrabi, N. et al., 2022. A survey on bias and fairness in machine learning. ACM Computing Surveys, 54 (6), pp. 1-35.
+Microsoft, 2026. Defending the gates: how a global coalition disrupted Tycoon 2FA, a major driver of initial access and large-scale online impersonation [online]. Microsoft On the Issues. Available at: https://blogs.microsoft.com/on-the-issues/2026/03/04/how-a-global-coalition-disrupted-tycoon/ [Accessed 15 October 2026].
+Microsoft Threat Intelligence, 2026. Email threat landscape: Q1 2026 trends and insights [online]. Microsoft Security Blog. Available at: https://www.microsoft.com/en-us/security/blog/2026/04/30/email-threat-landscape-q1-2026-trends-and-insights/ [Accessed 15 October 2026].
+Microsoft Threat Intelligence and Microsoft Digital Crimes Unit, 2026. The hidden network: inside the phishing infrastructure ecosystem powering global cybercrime [online]. Microsoft Security Blog. Available at: https://www.microsoft.com/en-us/security/blog/2026/10/14/the-hidden-network-inside-the-phishing-infrastructure-ecosystem-powering-global-cybercrime/ [Accessed 15 October 2026].
+Miller, T., 2019. Explanation in artificial intelligence: insights from the social sciences. Artificial Intelligence, 267, pp. 1-38.
+Mohammad, R.M., Thabtah, F. and McCluskey, L., 2014. Intelligent rule-based phishing websites classification. IET Information Security, 8 (3), pp. 153-160.
+NCSC, 2026. UK and partners expose Russian state-supported actors for new ‘zero-click’ phishing campaign targeting Western organisations [online]. National Cyber Security Centre. Available at: https://www.ncsc.gov.uk/news/uk-and-partners-expose-russian-state-supported-actors-for-new-zero-click-phishing-campaign [Accessed 19 October 2026].
+Nielsen, J., 1994. Enhancing the explanatory power of usability heuristics. In: Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (CHI ‘94). New York: ACM, 1994, pp. 152-158.
+OpenPhish, 2026. Academic use [online]. OpenPhish. Available at: https://openphish.com/academic_use.html [Accessed 15 October 2026].
+OWASP Foundation, 2025a. Application Security Verification Standard 5.0.0 [online]. OWASP Foundation. Available at: https://github.com/OWASP/ASVS/releases [Accessed 19 October 2026].
+OWASP Foundation, 2025b. OWASP Top 10:2025 [online]. OWASP Foundation. Available at: https://top10.owasp.org/2025/ [Accessed 19 October 2026].
+Parasuraman, R. and Riley, V., 1997. Humans and automation: use, misuse, disuse, abuse. Human Factors, 39 (2), pp. 230-253.
+Prasad, A. and Chandra, S., 2024a. PhiUSIIL: a diverse security profile empowered phishing URL detection framework based on similarity index and incremental learning. Computers & Security, 136, 103545.
+Prasad, A. and Chandra, S., 2024b. PhiUSIIL phishing URL (website) [dataset, online]. UCI Machine Learning Repository. Available at: https://archive.ics.uci.edu/dataset/967 [Accessed 19 October 2026].
+Regulation (EU) 2016/679 (United Kingdom General Data Protection Regulation) [online]. The National Archives. Available at: https://www.legislation.gov.uk/eur/2016/679 [Accessed 20 October 2026].
+Sahingoz, O.K. et al., 2019. Machine learning based phishing detection from URLs. Expert Systems with Applications, 117, pp. 345-357.
+Sheng, S. et al., 2009. An empirical analysis of phishing blacklists. In: Proceedings of the Sixth Conference on Email and Anti-Spam (CEAS 2009). Mountain View, CA: CEAS, 2009.
+Spicer, M. and Nurse, J.R.C., 2026. What makes people susceptible to phishing attacks: a systematic literature review and future research agenda. Computers & Security, 171, 105096.
+W3C, 2024. Web Content Accessibility Guidelines (WCAG) 2.2 [online]. W3C Recommendation, 12 December 2024. Available at: https://www.w3.org/TR/WCAG22/ [Accessed 19 October 2026].
+Zhang, Y., Hong, J.I. and Cranor, L.F., 2007. CANTINA: a content-based approach to detecting phishing web sites. In: Proceedings of the 16th International Conference on World Wide Web (WWW ‘07). New York: ACM, 2007, pp. 639-648.

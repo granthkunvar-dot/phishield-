@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Account Settings | Phishield{% endblock %}
+
+{% block content %}
+<div style="padding-top: 6rem; padding-bottom: 5rem;">
+<div class="wrap" style="max-width: 720px;">
+
+    <!-- Page header -->
+    <div class="anim" style="margin-bottom: 2.5rem;">
+        <p class="eyebrow"><span>Your Account</span></p>
+        <h1 style="font-size: clamp(1.8rem,4vw,2.6rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.15; margin: 0.5rem 0 0.75rem;">
+            Account <em style="font-family: var(--f-serif); font-style: italic; color: var(--blue); font-weight: 400;">Settings</em>
+        </h1>
+        <p style="color: var(--ink-3); margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Review your account details or exercise your UK GDPR data privacy rights.
+        </p>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div style="margin-bottom: 1.5rem;">
+        {% for category, message in messages %}
+        <div class="advisory-box {% if category == 'danger' or category == 'error' %}advisory-box--red{% endif %}" style="margin-bottom: 0.5rem;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Profile info panel -->
+    <div class="breakdown-panel anim anim-d1" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 0.4rem; margin-top: -2px;">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile Information
+            </h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem;">
+            <div>
+                <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 0 0 0.3rem;">Registered Email</p>
+                <p style="font-size: 0.92rem; font-weight: 600; margin: 0; word-break: break-all;">{{ user.email }}</p>
+            </div>
+            <div>
+                <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 0 0 0.3rem;">Member Since</p>
+                <p style="font-size: 0.92rem; margin: 0;">{{ user.created_at }}</p>
+            </div>
+            <div>
+                <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 0 0 0.3rem;">Total Scans</p>
+                <p style="font-size: 1.4rem; font-weight: 700; color: var(--blue); margin: 0; letter-spacing: -0.03em;">{{ scan_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GDPR Delete panel -->
+    <div class="breakdown-panel anim anim-d3" style="border-color: var(--red) !important;">
+        <div class="breakdown-panel-header" style="background: var(--red-soft); margin: -1.5rem -1.5rem 1.5rem; padding: 1rem 1.5rem; border-radius: 18px 18px 0 0; border-bottom: 1px solid rgba(220,63,69,.18);">
+            <h3 class="breakdown-panel-title" style="color: var(--red);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: middle; margin-right: 0.4rem; margin-top: -2px;">
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                UK GDPR Article 17: Right to Erasure
+            </h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0 0 1.5rem; line-height: 1.7;">
+            Deleting your account will permanently remove your login credentials, your complete scan history, and any submitted reports from the Phishield database. <strong>This action is irreversible.</strong>
+        </p>
+        <form action="{{ url_for('auth.account') }}" method="POST"
+              onsubmit="return confirm('Are you completely sure you want to permanently delete your account and all associated data?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label for="confirm_delete" style="font-size: 0.8rem; font-weight: 700; color: var(--ink-2); display: block; margin-bottom: 0.4rem;">
+                Type <strong style="font-family: var(--f-mono); letter-spacing: 0.05em;">DELETE</strong> to confirm:
+            </label>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input
+                    type="text"
+                    id="confirm_delete"
+                    name="confirm_delete"
+                    placeholder="DELETE"
+                    required
+                    autocomplete="off"
+                    style="max-width: 220px; border-color: var(--red) !important; flex: 1 1 180px;"
+                >
+                <button type="submit" class="btn btn--danger" style="flex-shrink: 0;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: middle; margin-right: 0.35rem; margin-top: -1px;">
+                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                    </svg>
+                    Delete Account &amp; All Data
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+</div>
+{% endblock %}

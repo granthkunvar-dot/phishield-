@@ -1,0 +1,37 @@
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Database (UK GDPR requirement: Database excluded from Git)
+*.db
+*.sqlite3
+phishield.db
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows System Files
+Thumbs.db
+ehthumbs.db
+
+# IDE & Editor Directories
+.vscode/
+.idea/
+*.swp
+*~
+

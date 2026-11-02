@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}About &amp; Methodology | Phishield{% endblock %}
+
+{% block content %}
+<div style="padding-top: 6rem; padding-bottom: 5rem;">
+<div class="wrap" style="max-width: 900px;">
+
+    <!-- Page header -->
+    <div class="anim" style="margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--line);">
+        <p class="eyebrow"><span>Research Methodology</span></p>
+        <h1 style="font-size: clamp(2.2rem,5vw,3.2rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.1; margin: 0.6rem 0 1rem;">
+            About <em style="font-family: var(--f-serif); font-style: italic; color: var(--blue); font-weight: 400;">Phishield</em>
+        </h1>
+        <p class="lede" style="max-width: 640px; margin: 0;">
+            Combining structural heuristic rules and Random Forest machine learning to make phishing detection transparent, secure, and explainable to non-technical users.
+        </p>
+    </div>
+
+    <!-- Research Aim -->
+    <div class="breakdown-panel anim anim-d1" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">Research Aim &amp; Question</h3>
+        </div>
+        <p style="margin: 0 0 1.25rem; font-size: 0.95rem; line-height: 1.7;">
+            <strong>Aim:</strong> To design, implement, and evaluate a website that detects phishing URLs by combining rule-based heuristics and machine learning techniques, explaining its results clearly to non-technical users.
+        </p>
+        <blockquote style="border-left: 3px solid var(--blue); margin: 0; padding: 1rem 1.5rem; background: var(--blue-50); border-radius: 0 12px 12px 0; font-size: 0.9rem; line-height: 1.7; color: var(--ink-2);">
+            <strong>Research Question:</strong> Can URL rules combined with a Random Forest on URL-only features reach at least 0.90 phishing precision and recall on unseen URLs, with reasons non-experts can follow?
+        </blockquote>
+    </div>
+
+    <!-- 13 Heuristic Rules -->
+    <div class="breakdown-panel anim anim-d2" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">The 13 Transparent URL Heuristic Rules</h3>
+        </div>
+        <p style="color: var(--ink-3); font-size: 0.9rem; margin: 0 0 1.5rem; line-height: 1.6;">
+            Grounded in foundational studies (Zhang et al., 2007; Mohammad, Thabtah &amp; McCluskey, 2014) and the PhiUSIIL benchmark (Prasad &amp; Chandra, 2024a), Phishield inspects 13 distinct structural indicators:
+        </p>
+        <ol style="padding-left: 1.5rem; margin: 0; color: var(--ink-2); font-size: 0.9rem; line-height: 2;">
+            <li><strong>IP Address in Hostname (R1):</strong> Flags raw numerical or hex/octal IP addresses used instead of registered domain names.</li>
+            <li><strong>URL Length Analysis (R2):</strong> Identifies abnormally bloated URLs (&gt; 75 chars) used to mask parameters or evade small mobile screens.</li>
+            <li><strong>URL Shortening Service (R3):</strong> Detects known link redirectors (e.g., bit.ly, tinyurl) used to hide the true host.</li>
+            <li><strong>Deceptive "@" Symbol (R4):</strong> Flags authentication delimiters that trick browsers into ignoring preceding authority text.</li>
+            <li><strong>Double Slash Redirection (R5):</strong> Detects consecutive slashes ('//') in path/query sections used in open redirects.</li>
+            <li><strong>Hyphens in Domain (R6):</strong> Identifies hyphenated patterns commonly seen in lookalike brand domains.</li>
+            <li><strong>Subdomain Nesting Depth (R7):</strong> Evaluates excessive subdomain stacking (3+ subdomains) mimicking legitimate organizations.</li>
+            <li><strong>Uncommon Web Port (R8):</strong> Flags non-standard ports (outside 80 and 443) that bypass standard reputation controls.</li>
+            <li><strong>Security Token in Hostname (R9):</strong> Catches misleading keywords ('https', 'http') baked into hostnames to falsely imply security.</li>
+            <li><strong>Brand Name Impersonation (R10):</strong> Matches high-target financial and service brand names on unauthorized hosts.</li>
+            <li><strong>High-Abuse TLD (R11):</strong> Flags top-level domains statistically over-represented in disposable spam and fast-flux infrastructure.</li>
+            <li><strong>Excessive Special Characters (R12):</strong> Detects high frequencies of delimiters and percent-encoded characters used for obfuscation.</li>
+            <li><strong>Punycode / Homograph Attack (R13):</strong> Identifies Internationalized Domain Name prefixes ('xn--') and visual homoglyphs.</li>
+        </ol>
+    </div>
+
+    <!-- ML section -->
+    <div class="breakdown-panel anim anim-d3" style="margin-bottom: 1.5rem;">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">Machine Learning &amp; Tabular Feature Engineering</h3>
+        </div>
+        <p style="color: var(--ink-3); font-size: 0.9rem; margin: 0 0 1.5rem; line-height: 1.6;">
+            Phishield extracts 26 purely structural, URL-only numerical features (lengths, character distributions, ratios, and Shannon entropy values).
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="padding: 1.25rem; background: var(--paper-2); border-radius: 14px; border: 1px solid var(--line);">
+                <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 0 0 0.5rem;">Baseline Classifier</p>
+                <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0; line-height: 1.6;">Logistic Regression trained on tabular features to establish an empirical benchmark.</p>
+            </div>
+            <div style="padding: 1.25rem; background: var(--blue-50); border-radius: 14px; border: 1px solid var(--blue-200);">
+                <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); margin: 0 0 0.5rem;">Production Classifier</p>
+                <p style="font-size: 0.9rem; color: var(--ink-2); margin: 0; line-height: 1.6;">Random Forest Ensemble (100 estimators, max depth 15) achieving &gt; 0.90 precision and recall with sub-millisecond inference latency.</p>
+            </div>
+        </div>
+        <div class="advisory-box" style="margin: 0;">
+            <strong>Hybrid Decision Weighting:</strong> To achieve transparent explainability without susceptibility to single-model evasion, the final assessment combines the 13 heuristic rules (40%) and the Random Forest probability (60%).
+        </div>
+    </div>
+
+    <!-- References -->
+    <div class="breakdown-panel anim anim-d4">
+        <div class="breakdown-panel-header">
+            <h3 class="breakdown-panel-title">Academic References</h3>
+        </div>
+        <ul style="font-size: 0.875rem; color: var(--ink-3); margin: 0; padding-left: 1.5rem; line-height: 2.1;">
+            <li>Akpan, E. et al., 2025. Email phishing detection using machine learning approaches. In: <em>ICISCCI 2024</em>. Springer, pp. 70-85.</li>
+            <li>APWG, 2026. <em>Phishing activity trends report, 1st quarter 2026</em>. Anti-Phishing Working Group.</li>
+            <li>BCS, 2022. <em>BCS Code of Conduct</em>. Swindon: BCS, The Chartered Institute for IT.</li>
+            <li>Gama, J. et al., 2014. A survey on concept drift adaptation. <em>ACM Computing Surveys</em>, 46 (4), pp. 1-37.</li>
+            <li>Mohammad, R.M., Thabtah, F. and McCluskey, L., 2014. Intelligent rule-based phishing websites classification. <em>IET Information Security</em>, 8 (3), pp. 153-160.</li>
+            <li>Prasad, A. and Chandra, S., 2024a. PhiUSIIL: a diverse security profile empowered phishing URL detection framework. <em>Computers &amp; Security</em>, 136, 103545.</li>
+            <li>Sahingoz, O.K. et al., 2019. Machine learning based phishing detection from URLs. <em>Expert Systems with Applications</em>, 117, pp. 345-357.</li>
+            <li>Zhang, Y., Hong, J.I. and Cranor, L.F., 2007. CANTINA: a content-based approach to detecting phishing web sites. In: <em>WWW '07</em>. ACM, pp. 639-648.</li>
+        </ul>
+    </div>
+
+</div>
+</div>
+{% endblock %}

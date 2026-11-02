@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Phishield | Explainable Phishing Detection{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+    <!-- Backdrop: dot grid + blue glow -->
+    <div class="hero__backdrop">
+        <div class="hero__glow"></div>
+    </div>
+    <!-- Vertical rules -->
+    <div class="hero__rules" aria-hidden="true">
+        <i></i><i></i>
+    </div>
+
+    <div class="wrap hero__inner">
+        <!-- Announce pill -->
+        <a href="{{ url_for('main.about') }}" class="pill anim">
+            <span class="pill__tag">Research</span>
+            <span class="pill__text">13 Heuristics + Random Forest · explainable by design</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+
+        <!-- Headline -->
+        <h1 class="hero__title anim anim-d1">
+            Detect <em>Phishing</em><br>Before It Catches You
+        </h1>
+        <!-- test-anchor: Explainable Phishing URL Detection -->
+
+        <!-- Subtitle -->
+        <p class="hero__lede anim anim-d2">
+            Structural URL analysis powered by 13 transparent heuristic rules and Random Forest ML —
+            without ever visiting the target site.
+        </p>
+
+        <!-- Scan form -->
+        <div class="hero__form anim anim-d3">
+            <form id="hero-form" action="{{ url_for('main.scan') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <fieldset role="group">
+                    <input
+                        type="text"
+                        id="hero-url"
+                        name="url"
+                        placeholder="Paste a suspicious link…"
+                        required
+                        autocomplete="off"
+                        aria-label="URL to inspect"
+                        style="font-size: .98rem;"
+                    >
+                    <button type="submit" id="hero-btn">
+                        Inspect Link
+                    </button>
+                </fieldset>
+            </form>
+
+            <!-- Quick chips -->
+            <div class="hero__chips">
+                <a href="{{ url_for('main.scan', url='https://en.wikipedia.org/wiki/Computer_security') }}" class="chip">
+                    <span class="chip__dot chip__dot--safe"></span>wikipedia.org
+                </a>
+                <a href="{{ url_for('main.scan', url='http://192.168.1.1:8080/login.php?token=xyz987') }}" class="chip">
+                    <span class="chip__dot chip__dot--danger"></span>192.168.1.1 (IP Host)
+                </a>
+                <a href="{{ url_for('main.scan', url='http://paypal-verification-alert.xyz/account/login') }}" class="chip">
+                    <span class="chip__dot chip__dot--danger"></span>paypal-verify.xyz
+                </a>
+                <a href="{{ url_for('main.scan', url='https://bit.ly/4k9Lzq') }}" class="chip">
+                    <span class="chip__dot chip__dot--warn"></span>bit.ly (Shortener)
+                </a>
+            </div>
+        </div>
+
+        <!-- Trust note -->
+        <div class="hero__note anim anim-d4">
+            <span class="live-dot"></span>
+            <span>Passive analysis only — we never visit or fetch destination pages</span>
+            <span>&bull;</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>CMA 1990 &amp; UK GDPR compliant</span>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="stats-strip anim anim-d4">
+            <div class="stat-item">
+                <span class="stat-item__n">13</span>
+                <span class="stat-item__l">Heuristic Rules</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-item__n">26</span>
+                <span class="stat-item__l">ML Features</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-item__n">&gt;90%</span>
+                <span class="stat-item__l">Precision &amp; Recall</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-item__n">0ms</span>
+                <span class="stat-item__l">Network Requests</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section class="section">
+    <div class="wrap">
+        <div class="shead">
+            <p class="eyebrow"><span>How It Works</span></p>
+            <h2 class="h2">Two-layer hybrid<br><em>decision engine</em></h2>
+            <p class="lede">Transparent structural checks combined with machine learning — every result is fully explainable, no black boxes.</p>
+        </div>
+
+        <div class="how-grid">
+            <div class="hcard">
+                <div class="hcard__vis">
+                    <div class="hcard__vis-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                </div>
+                <div class="hcard__body">
+                    <div class="hcard__n">01</div>
+                    <div class="hcard__title">13 Heuristic Rules — 40%</div>
+                    <p>Transparent structural checks: IP hosts, nested subdomains, deceptive <code>@</code> separators, brand-spoof hyphens, and high-abuse TLDs. Each rule has a plain-English explanation.</p>
+                </div>
+            </div>
+
+            <div class="hcard">
+                <div class="hcard__vis">
+                    <div class="hcard__vis-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                </div>
+                <div class="hcard__body">
+                    <div class="hcard__n">02</div>
+                    <div class="hcard__title">Random Forest ML — 60%</div>
+                    <p>Trained on 26 URL-only numerical features — Shannon entropy, character ratios, token lengths. Delivers &gt;90% precision &amp; recall with 0.059 ms/URL inference latency.</p>
+                </div>
+            </div>
+
+            <div class="hcard">
+                <div class="hcard__vis">
+                    <div class="hcard__vis-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    </div>
+                </div>
+                <div class="hcard__body">
+                    <div class="hcard__n">03</div>
+                    <div class="hcard__title">Explainable Insights</div>
+                    <p>Replaces opaque black-box scores with clear, plain-English reason statements. Empowers non-technical users to make confident, informed decisions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ RATING SYSTEM ══════════════ -->
+<section class="section section--paper-2">
+    <div class="wrap">
+        <div class="shead">
+            <p class="eyebrow"><span>Advisory Ratings</span></p>
+            <h2 class="h2">Three-level<br><em>risk assessment</em></h2>
+        </div>
+        <div class="rating-cards">
+            <div class="rating-card">
+                <div class="rating-card__badge"><span class="badge badge-safe">No Warning Signs</span></div>
+                <p>The address structure matches legitimate domain standards. Cautious notice: never guaranteed 100% safe — always verify the sender context.</p>
+            </div>
+            <div class="rating-card">
+                <div class="rating-card__badge"><span class="badge badge-suspicious">Suspicious Indicators</span></div>
+                <p>Multiple warning indicators triggered — unusual port, brand keyword on new host, or link shortener. High caution advised before clicking.</p>
+            </div>
+            <div class="rating-card">
+                <div class="rating-card__badge"><span class="badge badge-phishing">High-Risk Phishing</span></div>
+                <p>Strong signs of malicious impersonation, raw IP hosting, or credential harvesting. Do NOT enter credentials or financial data.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

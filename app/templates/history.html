@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Inspection History | Phishield{% endblock %}
+{% block content %}
+<div style="padding-top: 5.5rem; padding-bottom: 4rem;">
+<div class="wrap">
+
+    <div class="page-header anim">
+        <div>
+            <h2 class="page-title">Inspection Audit History</h2>
+            <p class="page-sub">Private audit log. Query strings with sensitive parameters are masked automatically.</p>
+        </div>
+        {% if scans %}
+        <form action="{{ url_for('main.clear_history') }}" method="POST"
+              onsubmit="return confirm('Purge your complete inspection history? This action cannot be undone.');"
+              style="margin:0;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button type="submit" class="btn btn--ghost btn--sm" style="border-radius:999px!important;color:var(--red)!important;border-color:var(--red)!important;">
+                Purge All History
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if scans %}
+    <div class="panel anim anim-d1" style="padding:0;overflow:hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:18%;">Timestamp</th>
+                    <th style="width:42%;">Inspected Address</th>
+                    <th style="width:14%;">Risk Level</th>
+                    <th style="width:12%;">Score</th>
+                    <th style="width:14%;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for scan in scans %}
+                <tr>
+                    <td style="font-size:.82rem;color:var(--ink-3);white-space:nowrap;">{{ scan.scanned_at }}</td>
+                    <td><code style="font-family:var(--f-mono);font-size:.82rem;word-break:break-all;color:var(--ink-2);">{{ scan.url_masked }}</code></td>
+                    <td><span class="risk-pill risk-pill--{{ scan.rating }}">{{ scan.rating | capitalize }}</span></td>
+                    <td>
+                        <strong style="font-family:var(--f-mono);font-size:.9rem;
+                            {% if scan.composite_score > 0.6 %}color:var(--red);
+                            {% elif scan.composite_score > 0.35 %}color:var(--amber);
+                            {% else %}color:var(--green);{% endif %}">
+                            {{ (scan.composite_score * 100) | round(1) }}%
+                        </strong>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('main.delete_scan', scan_id=scan.id) }}" method="POST" style="margin:0;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit" class="btn btn--ghost btn--sm"
+                                    style="height:30px;padding:0 10px;font-size:.75rem;"
+                                    onclick="return confirm('Delete this record?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state anim anim-d1">
+        <div class="empty-state__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        </div>
+        <h3>No Scans Yet</h3>
+        <p>When you inspect links while authenticated, your audit history appears here.</p>
+        <a href="{{ url_for('main.scan') }}" class="btn btn--primary">Run First Inspection</a>
+    </div>
+    {% endif %}
+
+    <div class="advisory anim anim-d2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div>
+            <strong>Data Retention &amp; Storage Limitation (UK GDPR Art. 5(1)(e)):</strong>
+            <p style="margin-top:.25rem;font-size:.88rem;">Audit logs older than 90 days are automatically purged. You can also delete individual records or permanently erase your user profile at any time.</p>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}

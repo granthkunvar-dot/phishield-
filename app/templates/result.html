@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Inspection Result | Phishield{% endblock %}
+
+{% block content %}
+<div style="padding-top: 5.5rem; padding-bottom: 4rem;">
+<div class="wrap" style="max-width: 960px;">
+
+    {# Gauge colour mapping #}
+    {% if result.rating == 'safe' %}
+        {% set gauge_color = '#12994F' %}
+        {% set gauge_label = 'Low Risk' %}
+    {% elif result.rating == 'suspicious' %}
+        {% set gauge_color = '#C98205' %}
+        {% set gauge_label = 'Moderate Risk' %}
+    {% else %}
+        {% set gauge_color = '#DC3F45' %}
+        {% set gauge_label = 'Critical' %}
+    {% endif %}
+    {% set circ = 282.7 %}
+    {% set pct  = (result.composite_score * 100) | round(1) %}
+    {% set dash_offset = circ - (circ * result.composite_score) %}
+
+    <!-- Header row -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;" class="anim">
+        <div>
+            <h2 style="font-size: 1.55rem; font-weight: 700; letter-spacing: -0.035em; margin: 0;">Inspection Assessment</h2>
+            <p style="color: var(--ink-3); font-size: .88rem; margin-top: .2rem;">Passive inspection via 13 Heuristic Rules + Random Forest ML</p>
+        </div>
+        <a href="{{ url_for('main.scan') }}" class="btn btn--ghost btn--sm">← New Inspection</a>
+    </div>
+
+    <!-- Rating banner -->
+    <div class="result-banner anim anim-d1">
+        <div class="result-banner__top">
+            <div class="result-banner__info">
+                <span class="badge badge-{{ result.rating }}" style="margin-bottom: .75rem;">{{ result.rating_label }}</span>
+                <h3 style="font-size: 1.3rem; font-weight: 700; letter-spacing: -0.025em; margin: 0 0 .4rem;">
+                    {% if result.rating == 'safe' %}
+                        Low Risk — No Warning Signs Found
+                    {% elif result.rating == 'suspicious' %}
+                        Moderate Risk — Suspicious Characteristics Detected
+                    {% else %}
+                        Critical Warning — Highly Probable Phishing Link
+                    {% endif %}
+                </h3>
+                <p style="color: var(--ink-2); font-size: .95rem; line-height: 1.6; margin: 0;">{{ result.advisory_text }}</p>
+            </div>
+
+            <!-- SVG Donut Gauge -->
+            <div class="result-banner__score">
+                <div class="gauge" style="position: relative; width: 112px; height: 112px;">
+                    <svg viewBox="0 0 100 100" width="112" height="112">
+                        <circle class="gauge-track" cx="50" cy="50" r="45"/>
+                        <circle class="gauge-fill"
+                                cx="50" cy="50" r="45"
+                                stroke="{{ gauge_color }}"
+                                stroke-dasharray="{{ circ }}"
+                                stroke-dashoffset="{{ dash_offset }}"
+                                style="filter: drop-shadow(0 0 5px {{ gauge_color }}66);"/>
+                    </svg>
+                    <div class="gauge-center">
+                        <span class="gauge-pct" style="color: {{ gauge_color }};">{{ pct }}%</span>
+                        <span class="gauge-sub">Risk</span>
+                    </div>
+                </div>
+                <p style="font-family: var(--f-mono); font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: {{ gauge_color }}; margin-top: .5rem; text-align: center;">{{ gauge_label }}</p>
+            </div>
+        </div>
+
+        <!-- Defanged URL -->
+        <div class="result-banner__defanged">
+            <span class="defanged-label">Defanged Address — Neutralized to Prevent Accidental Execution</span>
+            <div class="defanged-row">
+                <span class="defanged-code" id="defanged-text">{{ result.url_defanged }}</span>
+                <button type="button" class="btn-copy"
+                        onclick="navigator.clipboard.writeText(document.getElementById('defanged-text').innerText); this.textContent='✓ Copied!'; setTimeout(()=>this.textContent='Copy', 2000);">
+                    Copy
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hybrid breakdown -->
+    <div class="panel anim anim-d2">
+        <div class="panel__head">
+            <span class="panel__title">Hybrid Decision Breakdown</span>
+        </div>
+        <div class="panel__body">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="meter-wrap">
+                    <div class="meter-row">
+                        <span class="meter-label" data-tip="13 structural checks, 40% weight">13 Heuristic Rules (40%)</span>
+                        <span class="meter-val" style="color: var(--red);">{{ (result.rules_score * 100) | round(1) }}%</span>
+                    </div>
+                    <div class="meter-track"><div class="meter-fill meter-fill--red" style="width: {{ (result.rules_score * 100) | round(1) }}%;"></div></div>
+                    <p class="meter-note">{{ result.triggered_count }} of {{ result.total_rules }} checks flagged</p>
+                </div>
+                <div class="meter-wrap">
+                    <div class="meter-row">
+                        <span class="meter-label" data-tip="26-feature RF model, 60% weight">Random Forest ML (60%)</span>
+                        <span class="meter-val" style="color: var(--blue);">{{ (result.ml_score * 100) | round(1) }}%</span>
+                    </div>
+                    <div class="meter-track"><div class="meter-fill meter-fill--blue" style="width: {{ (result.ml_score * 100) | round(1) }}%;"></div></div>
+                    <p class="meter-note">
+                        {% if result.model_available %}26 URL-only tabular features{% else %}Heuristic fallback active{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rule table -->
+    <div class="panel anim anim-d3">
+        <div class="panel__head">
+            <span class="panel__title">13 Heuristic Rule Inspections</span>
+            <div class="filter-tabs" role="tablist">
+                <button type="button" class="filter-btn active" onclick="filterRules('all',this)">All ({{ result.total_rules }})</button>
+                <button type="button" class="filter-btn" onclick="filterRules('warning',this)">
+                    <span style="width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block;"></span>
+                    Warnings ({{ result.triggered_count }})
+                </button>
+                <button type="button" class="filter-btn" onclick="filterRules('clear',this)">
+                    <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+                    Clear ({{ result.total_rules - result.triggered_count }})
+                </button>
+            </div>
+        </div>
+        <table id="rules-table">
+            <thead>
+                <tr>
+                    <th style="width:7%;">ID</th>
+                    <th style="width:26%;">Rule</th>
+                    <th style="width:13%;">Status</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in result.rules_breakdown %}
+                <tr class="rule-row rule-row-{{ 'warning' if rule.triggered else 'clear' }}">
+                    <td><code style="font-family:var(--f-mono);font-size:.8rem;color:var(--ink-3);">{{ rule.id }}</code></td>
+                    <td><strong style="font-size:.875rem;font-weight:600;">{{ rule.name }}</strong></td>
+                    <td>
+                        {% if rule.triggered %}
+                            <span class="badge badge-phishing">Warning</span>
+                        {% else %}
+                            <span class="badge badge-safe">Clear</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-size:.875rem;color:var(--ink-2);line-height:1.55;">{{ rule.explanation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bottom actions -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;" class="anim anim-d4">
+        <div class="panel" style="margin: 0;">
+            <div class="panel__head"><span class="panel__title">Report a Discrepancy</span></div>
+            <div class="panel__body">
+                <p style="font-size:.88rem;color:var(--ink-3);margin-bottom:1rem;">Did our engine misclassify this address? Help us improve.</p>
+                <a href="{{ url_for('main.report_wrong_result', scan_id=scan_id or '', url=result.url_original, rating=result.rating) }}"
+                   class="btn btn--ghost" style="width:100%;justify-content:center;border-radius:12px!important;">
+                    Report Wrong Result
+                </a>
+            </div>
+        </div>
+        <div class="panel" style="margin: 0;">
+            <div class="panel__head"><span class="panel__title">Official UK Reporting</span></div>
+            <div class="panel__body">
+                <p style="font-size:.88rem;color:var(--ink-3);margin-bottom:.75rem;">If you received this link in a suspected scam:</p>
+                <ul style="list-style:none;font-size:.88rem;color:var(--ink-2);display:grid;gap:.4rem;">
+                    <li><strong>Emails:</strong> <code style="font-family:var(--f-mono);">report@phishing.gov.uk</code></li>
+                    <li><strong>SMS:</strong> Forward to <code style="font-family:var(--f-mono);">7726</code></li>
+                    <li><strong>Losses:</strong> <a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener" style="color:var(--blue);">Action Fraud UK</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% block scripts %}
+<script>
+function filterRules(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.rule-row').forEach(row => {
+        if (cat === 'all') row.style.display = '';
+        else if (cat === 'warning') row.style.display = row.classList.contains('rule-row-warning') ? '' : 'none';
+        else row.style.display = row.classList.contains('rule-row-clear') ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}
