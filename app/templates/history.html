@@ -1,86 +1,86 @@
 {% extends "base.html" %}
-{% block title %}Inspection History | Phishield{% endblock %}
-{% block content %}
-<div style="padding-top: 5.5rem; padding-bottom: 4rem;">
-<div class="wrap">
 
-    <div class="page-header anim">
+{% block title %}Inspection History | Phishield{% endblock %}
+
+{% block content %}
+<section style="max-width: 960px; margin: 2rem auto;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
         <div>
-            <h2 class="page-title">Inspection Audit History</h2>
-            <p class="page-sub">Private audit log. Query strings with sensitive parameters are masked automatically.</p>
+            <h1 style="font-size: 2rem; font-weight: 800; margin: 0; color: #0f172a;">Inspection History</h1>
+            <p style="color: var(--text-muted); margin: 0.25rem 0 0; font-size: 0.95rem;">
+                Private, unprofiled personal inspection archive (retained for 90 days under UK GDPR).
+            </p>
         </div>
         {% if scans %}
-        <form action="{{ url_for('main.clear_history') }}" method="POST"
-              onsubmit="return confirm('Purge your complete inspection history? This action cannot be undone.');"
-              style="margin:0;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit" class="btn btn--ghost btn--sm" style="border-radius:999px!important;color:var(--red)!important;border-color:var(--red)!important;">
-                Purge All History
-            </button>
-        </form>
+        <div>
+            <form action="{{ url_for('main.clear_history') }}" method="POST" onsubmit="return confirm('Clear all personal inspection history?');" style="margin: 0;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="contrast outline" style="font-size: 0.85rem; padding: 0.4rem 1rem;">
+                    Clear All History
+                </button>
+            </form>
+        </div>
         {% endif %}
     </div>
 
     {% if scans %}
-    <div class="panel anim anim-d1" style="padding:0;overflow:hidden;">
-        <table>
+    <article style="box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); overflow-x: auto;">
+        <table class="rules-table">
             <thead>
                 <tr>
-                    <th style="width:18%;">Timestamp</th>
-                    <th style="width:42%;">Inspected Address</th>
-                    <th style="width:14%;">Risk Level</th>
-                    <th style="width:12%;">Score</th>
-                    <th style="width:14%;">Action</th>
+                    <th style="width: 20%;">Date &amp; Time</th>
+                    <th style="width: 45%;">Defanged Web Link</th>
+                    <th style="width: 20%;">Assessment</th>
+                    <th style="width: 15%;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for scan in scans %}
+                {% for s in scans %}
                 <tr>
-                    <td style="font-size:.82rem;color:var(--ink-3);white-space:nowrap;">{{ scan.scanned_at }}</td>
-                    <td><code style="font-family:var(--f-mono);font-size:.82rem;word-break:break-all;color:var(--ink-2);">{{ scan.url_masked }}</code></td>
-                    <td><span class="risk-pill risk-pill--{{ scan.rating }}">{{ scan.rating | capitalize }}</span></td>
-                    <td>
-                        <strong style="font-family:var(--f-mono);font-size:.9rem;
-                            {% if scan.composite_score > 0.6 %}color:var(--red);
-                            {% elif scan.composite_score > 0.35 %}color:var(--amber);
-                            {% else %}color:var(--green);{% endif %}">
-                            {{ (scan.composite_score * 100) | round(1) }}%
-                        </strong>
+                    <td style="font-size: 0.85rem; color: #64748b; white-space: nowrap;">
+                        {{ s.scanned_at }}
                     </td>
                     <td>
-                        <form action="{{ url_for('main.delete_scan', scan_id=scan.id) }}" method="POST" style="margin:0;">
+                        <code style="font-size: 0.85rem; word-break: break-all;">{{ s.url_masked }}</code>
+                    </td>
+                    <td>
+                        {% if s.rating == 'safe' %}
+                            <span class="rule-badge clear" style="background: var(--safe-bg); color: var(--safe-text); font-weight: 700;">No Warning</span>
+                        {% elif s.rating == 'suspicious' %}
+                            <span class="rule-badge" style="background: var(--warn-bg); color: var(--warn-text); font-weight: 700;">Suspicious</span>
+                        {% else %}
+                            <span class="rule-badge flagged">Phishing</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('main.delete_scan', scan_id=s.id) }}" method="POST" style="margin: 0;">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                            <button type="submit" class="btn btn--ghost btn--sm"
-                                    style="height:30px;padding:0 10px;font-size:.75rem;"
-                                    onclick="return confirm('Delete this record?')">Delete</button>
+                            <button type="submit" class="contrast outline" style="padding: 0.2rem 0.6rem; font-size: 0.75rem; border: none; background: transparent; color: #dc2626; cursor: pointer;">
+                                Delete
+                            </button>
                         </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+    </article>
     {% else %}
-    <div class="empty-state anim anim-d1">
-        <div class="empty-state__icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-        </div>
-        <h3>No Scans Yet</h3>
-        <p>When you inspect links while authenticated, your audit history appears here.</p>
-        <a href="{{ url_for('main.scan') }}" class="btn btn--primary">Run First Inspection</a>
-    </div>
+    <article style="text-align: center; padding: 3rem 1.5rem; background: #ffffff;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" style="margin: 0 auto 1rem;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #334155; margin-bottom: 0.5rem;">No Inspection Records</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+            You have not inspected any web links yet, or your past records were deleted under automated 90-day retention cleanup.
+        </p>
+        <a href="{{ url_for('main.scan') }}" role="button">Inspect a Link Now</a>
+    </article>
     {% endif %}
 
-    <div class="advisory anim anim-d2">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <div>
-            <strong>Data Retention &amp; Storage Limitation (UK GDPR Art. 5(1)(e)):</strong>
-            <p style="margin-top:.25rem;font-size:.88rem;">Audit logs older than 90 days are automatically purged. You can also delete individual records or permanently erase your user profile at any time.</p>
-        </div>
+    <div class="advisory-card" style="font-size: 0.85rem; margin-top: 1.5rem;">
+        <strong>UK GDPR Data Protection Note:</strong>
+        Personal history is strictly private and never shared, profiled, or sold (PPD Section 8.1). Stored URLs have sensitive parameters automatically sanitized.
     </div>
 
-</div>
-</div>
+</section>
 {% endblock %}

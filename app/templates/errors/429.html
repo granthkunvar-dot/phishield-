@@ -1,27 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Rate Limit Exceeded (429) | Phishield{% endblock %}
+{% block title %}Rate Limit Triggered (429) | Phishield{% endblock %}
 {% block content %}
-<div style="padding-top: 8rem; padding-bottom: 6rem; text-align: center;">
-<div class="wrap" style="max-width: 520px;">
+<section style="max-width: 580px; margin: 4rem auto; text-align: center;">
+    <article style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);">
+        <header>
+            <span class="rule-badge" style="background: var(--warn-bg); color: var(--warn-text); font-weight: 700;">HTTP 429</span>
+            <h2 style="font-size: 1.75rem; font-weight: 800; margin: 0.5rem 0 0.25rem;">Rate Limit Triggered</h2>
+        </header>
 
-    <div style="width: 80px; height: 80px; background: var(--amber-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.2">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-        </svg>
-    </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 1rem 0;">
+            To defend against automated denial-of-service and brute-force scanning, request rates are regulated.
+        </p>
+        <p style="font-weight: 700; color: #334155; margin-bottom: 1.5rem;">
+            {{ error_message or "Please wait 60 seconds before submitting another request." }}
+        </p>
 
-    <p class="eyebrow" style="justify-content: center; margin-bottom: 0.75rem;"><span>HTTP 429</span></p>
-    <h2 style="font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; letter-spacing: -0.04em; margin: 0 0 1rem; line-height: 1.15;">Rate Limit <em style="font-family: var(--f-serif); font-style: italic; color: var(--amber); font-weight: 400;">Triggered</em></h2>
-    <p style="color: var(--ink-3); margin: 0 0 0.75rem; font-size: 1rem; line-height: 1.7;">
-        To defend against automated DoS and brute-force attacks, request rates are strictly regulated.
-    </p>
-    <p style="color: var(--ink-2); font-weight: 600; margin: 0 0 2.5rem; font-size: 0.95rem;">
-        {{ error_message or "Please wait 60 seconds before making another request." }}
-    </p>
-
-    <a href="{{ url_for('main.scan') }}" class="btn btn--primary">Retry Inspection</a>
-
-</div>
-</div>
+        <a href="{{ url_for('main.scan') }}" role="button">Retry Inspection</a>
+    </article>
+</section>
 {% endblock %}

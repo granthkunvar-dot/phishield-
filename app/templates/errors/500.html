@@ -1,28 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Server Error (500) | Phishield{% endblock %}
+{% block title %}Internal Server Error (500) | Phishield{% endblock %}
 {% block content %}
-<div style="padding-top: 8rem; padding-bottom: 6rem; text-align: center;">
-<div class="wrap" style="max-width: 520px;">
+<section style="max-width: 580px; margin: 4rem auto; text-align: center;">
+    <article style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);">
+        <header>
+            <span class="rule-badge flagged">HTTP 500</span>
+            <h2 style="font-size: 1.75rem; font-weight: 800; margin: 0.5rem 0 0.25rem;">Internal Processing Error</h2>
+        </header>
 
-    <div style="width: 80px; height: 80px; background: var(--red-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-    </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 1rem 0 1.5rem;">
+            An unexpected error occurred in the analysis pipeline. Technical stack traces are suppressed in accordance with OWASP error-handling guidelines to preserve system confidentiality.
+        </p>
 
-    <p class="eyebrow" style="justify-content: center; margin-bottom: 0.75rem;"><span>HTTP 500</span></p>
-    <h2 style="font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; letter-spacing: -0.04em; margin: 0 0 1rem; line-height: 1.15;">Internal <em style="font-family: var(--f-serif); font-style: italic; color: var(--red); font-weight: 400;">Processing Error</em></h2>
-    <p style="color: var(--ink-3); margin: 0 0 2.5rem; font-size: 1rem; line-height: 1.7;">
-        An unexpected error occurred in the processing pipeline. Technical stack traces are suppressed to preserve system confidentiality.
-    </p>
-
-    <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-        <a href="{{ url_for('main.scan') }}" class="btn btn--primary">Restart Analysis</a>
-        <a href="{{ url_for('main.index') }}" class="btn btn--ghost">Go to Homepage</a>
-    </div>
-
-</div>
-</div>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('main.scan') }}" role="button">Restart Analysis</a>
+            <a href="{{ url_for('main.index') }}" role="button" class="contrast outline">Go to Homepage</a>
+        </div>
+    </article>
+</section>
 {% endblock %}

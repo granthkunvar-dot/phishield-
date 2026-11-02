@@ -3,29 +3,23 @@
 {% block title %}Report a Wrong Result | Phishield{% endblock %}
 
 {% block content %}
-<div style="padding-top: 6rem; padding-bottom: 5rem;">
-<div class="wrap" style="max-width: 680px;">
+<section style="max-width: 680px; margin: 2rem auto;">
 
-    <!-- Page header -->
-    <div class="anim" style="text-align: center; margin-bottom: 2.5rem;">
-        <p class="eyebrow" style="justify-content: center;"><span>Model Feedback</span></p>
-        <h1 style="font-size: clamp(1.8rem,4vw,2.6rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.15; margin: 0.5rem 0 0.75rem;">
-            Report a <em style="font-family: var(--f-serif); font-style: italic; color: var(--blue); font-weight: 400;">Wrong Result</em>
-        </h1>
-        <p class="lede" style="max-width: 520px; margin: 0 auto;">
-            Help us calibrate heuristic rules and detect machine learning bias. Your feedback directly informs model evaluation and error analysis.
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem; color: #0f172a;">Report a Wrong Result</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+            Help calibrate heuristic rules and detect machine learning classification bias (PPD Section 8.1 &amp; Table 4).
         </p>
     </div>
 
-    <!-- Form card -->
-    <div class="scan-card anim anim-d1">
-        <form action="{{ url_for('main.report_wrong_result') }}" method="POST" style="display: grid; gap: 1.1rem;">
+    <article style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);">
+        <form action="{{ url_for('main.report_wrong_result') }}" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <input type="hidden" name="scan_id" value="{{ scan_id or '' }}">
             <input type="hidden" name="reported_rating" value="{{ rating or 'unknown' }}">
 
-            <div>
-                <label for="url" style="font-size: 0.8rem; font-weight: 700; color: var(--ink-3); display: block; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.06em;">Web Address / URL</label>
+            <label for="url" style="font-weight: 700; font-size: 0.9rem;">
+                Web Address / URL:
                 <input
                     type="text"
                     id="url"
@@ -35,44 +29,37 @@
                     required
                     autocomplete="off"
                 >
-            </div>
+            </label>
 
-            <div>
-                <label for="expected_rating" style="font-size: 0.8rem; font-weight: 700; color: var(--ink-3); display: block; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.06em;">Correct Classification</label>
+            <label for="expected_rating" style="font-weight: 700; font-size: 0.9rem; margin-top: 1rem;">
+                What should this link be classified as?
                 <select id="expected_rating" name="expected_rating" required>
                     <option value="safe" {% if rating != 'safe' %}selected{% endif %}>Legitimate / Safe (False Alarm — False Positive)</option>
                     <option value="phishing" {% if rating == 'safe' %}selected{% endif %}>Malicious / Phishing (Missed Threat — False Negative)</option>
                     <option value="suspicious">Suspicious / Uncertain</option>
                 </select>
-            </div>
+            </label>
 
-            <div>
-                <label for="comments" style="font-size: 0.8rem; font-weight: 700; color: var(--ink-3); display: block; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.06em;">
-                    Additional Details <span style="font-weight: 400; color: var(--ink-3); text-transform: none;">(optional)</span>
-                </label>
+            <label for="comments" style="font-weight: 700; font-size: 0.9rem; margin-top: 1rem;">
+                Additional Context / Evidence:
                 <textarea
                     id="comments"
                     name="comments"
                     rows="3"
-                    placeholder="Explain why you believe this classification was inaccurate (e.g., official student portal, internal enterprise dashboard)…"
+                    placeholder="Explain why you believe this classification was inaccurate (e.g. verified university student portal, corporate intranet)..."
                 ></textarea>
-            </div>
+            </label>
 
-            <button type="submit" class="btn btn--primary" style="width: 100%; justify-content: center; margin-top: 0.25rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: middle; margin-right: 0.4rem; margin-top: -1px;">
-                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
+            <button type="submit" style="width: 100%; margin-top: 1.25rem; font-weight: 700;">
                 Submit Feedback Report
             </button>
         </form>
-    </div>
+    </article>
 
-    <!-- Advisory -->
-    <div class="advisory-box anim anim-d2" style="margin-top: 1.25rem; font-size: 0.85rem;">
+    <div class="advisory-card" style="font-size: 0.85rem; margin-top: 1rem;">
         <strong>Ethical Research Compliance:</strong>
-        Submitted reports are reviewed purely for academic benchmarking and evaluation. Reported links are stored as defanged text only and are never queried or fetched online.
+        Submitted reports are reviewed strictly for academic model calibration and error analysis. Reported URLs are stored as defanged text only and are never fetched online.
     </div>
 
-</div>
-</div>
+</section>
 {% endblock %}

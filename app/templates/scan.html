@@ -1,109 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Inspect a Link | Phishield{% endblock %}
+
+{% block title %}Inspect a Suspicious Web Link | Phishield{% endblock %}
 
 {% block content %}
-<div style="padding-top: 6rem; padding-bottom: 4rem;">
-<div class="wrap" style="max-width: 760px;">
-
-    <div class="anim" style="text-align: center; margin-bottom: 2.5rem;">
-        <p class="eyebrow" style="justify-content: center;"><span>Passive Analysis</span></p>
+<section style="max-width: 780px; margin: 2rem auto;">
+    <div style="text-align: center; margin-bottom: 2rem;">
         <!-- test-anchor: Inspect a Suspicious Web Link -->
-        <h1 style="font-size: clamp(2rem,5vw,3rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: .75rem;">
-            Inspect a <em style="font-family: var(--f-serif); font-style: italic; color: var(--blue); font-weight: 400;">Suspicious</em> Web Link
+        <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; color: #0f172a;">
+            Inspect a Suspicious Web Link
         </h1>
-        <p class="lede" style="margin: 0 auto; text-align: center;">
-            We perform structural, passive evaluation only — we never visit or fetch the link.
+        <p style="color: var(--text-muted); font-size: 1.05rem; margin: 0;">
+            Zero-click passive structural analysis. We never connect to, ping, or fetch the destination server.
         </p>
     </div>
 
-    <div class="scan-card anim anim-d1">
+    <article style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);">
         <form id="scan-form" action="{{ url_for('main.scan') }}" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-            <label for="url-input">Web address to inspect</label>
+            <label for="url-input" style="font-weight: 700; display: block; margin-bottom: 0.5rem;">
+                Web Address to Analyze:
+            </label>
+
             <fieldset role="group">
                 <input
                     type="text"
                     id="url-input"
                     name="url"
                     value="{{ url_prefill or '' }}"
-                    placeholder="https://example-suspicious-domain.net/login?verify=1"
+                    placeholder="https://example-suspicious-portal.com/login?verify=1"
                     required
                     autocomplete="off"
-                    autofocus
+                    aria-label="URL to inspect"
                 >
-                <button type="submit" id="scan-btn">Inspect Link</button>
+                <button type="submit" id="submit-btn" style="padding: 0 1.75rem; font-weight: 700;">
+                    Inspect Link
+                </button>
             </fieldset>
-            <div class="scan-progress-bar" id="scan-progress">
-                <div class="scan-progress-fill"></div>
+
+            <div class="sample-chips">
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Suggested Samples:</span>
+                <a class="sample-chip" href="{{ url_for('main.scan', url='https://www.wikipedia.org') }}">wikipedia.org (Safe)</a>
+                <a class="sample-chip" href="{{ url_for('main.scan', url='http://192.168.1.1/login') }}">192.168.1.1 (IP Host)</a>
+                <a class="sample-chip" href="{{ url_for('main.scan', url='https://paypal-verify-account.xyz/update') }}">paypal-verify.xyz (Brand Impersonation)</a>
+                <a class="sample-chip" href="{{ url_for('main.scan', url='https://bit.ly/secure-login-39') }}">bit.ly (Shortener)</a>
             </div>
         </form>
+    </article>
 
-        <!-- Quick test chips -->
-        <div style="margin-top: 1.5rem;">
-            <p style="font-family: var(--f-mono); font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-3); margin-bottom: .65rem;">
-                Instant test examples — click to populate:
-            </p>
-            <div style="display: flex; flex-wrap: wrap; gap: .4rem;">
-                <a href="{{ url_for('main.scan', url='https://en.wikipedia.org/wiki/Computer_security') }}" class="chip">
-                    <span class="chip__dot chip__dot--safe"></span>wikipedia.org (Legitimate)
-                </a>
-                <a href="{{ url_for('main.scan', url='http://192.168.1.1:8080/secure/login.php?token=secret123') }}" class="chip">
-                    <span class="chip__dot chip__dot--danger"></span>192.168.1.1:8080 (IP Host)
-                </a>
-                <a href="{{ url_for('main.scan', url='http://paypal-verification-desk.net/signin') }}" class="chip">
-                    <span class="chip__dot chip__dot--danger"></span>paypal-verification.net
-                </a>
-                <a href="{{ url_for('main.scan', url='https://bit.ly/3xY9kL') }}" class="chip">
-                    <span class="chip__dot chip__dot--warn"></span>bit.ly (Shortener)
-                </a>
-                <a href="{{ url_for('main.scan', url='http://google.com@phishing-target.xyz/login') }}" class="chip">
-                    <span class="chip__dot chip__dot--danger"></span>google.com@evil.xyz (@ Trick)
-                </a>
-            </div>
-        </div>
+    <div class="advisory-card">
+        <strong style="display: block; margin-bottom: 0.25rem;">Passive Analysis Architecture:</strong>
+        In accordance with Section 1 of the Computer Misuse Act 1990 and OWASP ASVS guidelines, Phishield conducts 100% offline syntactic feature extraction. Links are processed purely as character sequences and are never retrieved over HTTP/HTTPS, preventing Server-Side Request Forgery (SSRF) and ensuring the safety of your device.
     </div>
-
-    <!-- Advisory -->
-    <div class="advisory anim anim-d2">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <div>
-            <strong>Legal &amp; Safety Framework (CMA 1990 &amp; UK GDPR):</strong>
-            <p style="margin-top: .3rem;">In accordance with Section 1 of the Computer Misuse Act 1990, Phishield inspects only the syntactical and lexical features of the URL string. No connection request is ever dispatched to target servers, guaranteeing immunity from SSRF and ensuring your personal network address is never exposed.</p>
-        </div>
-    </div>
-
-</div>
-</div>
-
-{% block scripts %}
-<script>
-(function(){
-    var form = document.getElementById('scan-form');
-    var btn  = document.getElementById('scan-btn');
-    var bar  = document.getElementById('scan-progress');
-    var inp  = document.getElementById('url-input');
-
-    form.addEventListener('submit', function(){
-        if (inp.value.trim()) {
-            bar.classList.add('active');
-            btn.disabled = true;
-            btn.textContent = 'Scanning…';
-        }
-    });
-
-    var examples = [
-        'https://suspicious-bank-login.com/account/verify',
-        'http://192.168.1.1:8080/admin/setup.php',
-        'https://paypa1-secure-centre.ru/confirm',
-        'http://bit.ly/3xY9kL2',
-        'https://amazon.com.account-update.xyz/signin',
-    ];
-    var idx = 0;
-    setInterval(function(){
-        if (!inp.value) { idx = (idx+1) % examples.length; inp.placeholder = examples[idx]; }
-    }, 3000);
-})();
-</script>
-{% endblock %}
+</section>
 {% endblock %}

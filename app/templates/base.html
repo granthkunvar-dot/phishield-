@@ -1,171 +1,94 @@
 <!DOCTYPE html>
-<html lang="en" class="js">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Phishield | Explainable Phishing Detection{% endblock %}</title>
-    <meta name="description" content="Inspect suspicious web links instantly. Phishield uses 13 structural heuristics + Random Forest ML — without ever visiting the target URL.">
-    <meta name="theme-color" content="#F7F6F2">
-
-    <!-- SVG favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232211FF' stroke-width='2.5'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/><path d='m9 12 2 2 4-4'/></svg>">
-
-    <!-- Self-hosted Geist fonts (preloaded) -->
-    <link rel="preload" href="{{ url_for('static', filename='antideploy/fonts/geist-var.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ url_for('static', filename='antideploy/fonts/instrument-serif-italic.woff2') }}" as="font" type="font/woff2" crossorigin>
-
-    <!-- Design System -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}?v=3.0">
-    <style>
-      *, *::before, *::after { box-sizing: border-box; }
-      body { margin: 0; background: #F7F6F2; color: #0C0B14; }
-      .brand__mark { width: 14px !important; height: 24px !important; max-width: 14px !important; max-height: 24px !important; display: inline-block; vertical-align: middle; color: #2211FF; }
-      .site-nav ul, .nav-bar ul { list-style: none; padding: 0; margin: 0; }
-    </style>
+    <meta name="description" content="Explainable phishing URL detection combining 13 transparent heuristic rules and Random Forest machine learning. Zero-click passive analysis.">
+    
+    <!-- Pinned Local Pico CSS (PPD Table 5 / OWASP A03 / WCAG 2.2 AA) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pico.min.css') }}">
+    <!-- Academic Cybersecurity Design System & Overlays -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}?v=4.0">
 </head>
 <body>
 
-<!-- Grain overlay (subtle paper texture) -->
-<div class="grain" aria-hidden="true"></div>
-
-<!-- SVG sprite (icons) -->
-<svg class="grain" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden;">
-    <defs>
-        <symbol id="ico-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
-            <path d="m9 12 2 2 4-4"/>
-        </symbol>
-        <symbol id="ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
-        <symbol id="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
-        <symbol id="ico-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
-        <symbol id="ico-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
-        <symbol id="ico-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="11" x="4" y="11" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
-        <symbol id="ico-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
-        <symbol id="ico-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
-    </defs>
-</svg>
-
-<!-- ══════════════════════════ NAV ══════════════════════════ -->
-<nav class="site-nav" id="site-nav">
-    <div class="nav-bar" id="nav-bar">
-        <!-- Brand -->
-        <a href="{{ url_for('main.index') }}" class="brand">
-            <svg class="brand__mark" width="14" height="24" viewBox="604 292 790 1410" aria-hidden="true" style="width:14px;height:24px;max-width:14px;max-height:24px;flex-shrink:0;">
-                <path fill="#2211FF" d="M676 914 L676 621.5 A329.5 329.5 0 0 1 1335 621.5 L1335 914 A14 14 0 0 1 1321 928 L690 928 A14 14 0 0 1 676 914 Z"/>
-                <path fill="#2211FF" d="M604 1010 L1394 1010 L999 1702 Z"/>
-            </svg>
-            Phi<strong>shield</strong>
-        </a>
-
-        <!-- Nav links -->
-        <ul class="nav-links">
-            <li><a href="{{ url_for('main.scan') }}" {% if request.endpoint == 'main.scan' %}class="active"{% endif %}>Inspect</a></li>
-            <li><a href="{{ url_for('main.about') }}" {% if request.endpoint == 'main.about' %}class="active"{% endif %}>Methodology</a></li>
-            {% if session.get('user_id') %}
-                <li><a href="{{ url_for('main.history') }}" {% if request.endpoint == 'main.history' %}class="active"{% endif %}>History</a></li>
-            {% endif %}
-        </ul>
-
-        <!-- Actions -->
-        <div class="nav-actions">
-            {% if session.get('user_id') %}
-                <a href="{{ url_for('auth.account') }}" class="btn btn--ghost btn--sm">Account</a>
-                <a href="{{ url_for('auth.logout') }}" class="btn btn--ghost btn--sm">Sign Out</a>
-            {% else %}
-                <a href="{{ url_for('auth.login') }}" class="btn btn--ghost btn--sm">Sign In</a>
-                <a href="{{ url_for('auth.register') }}" class="btn btn--primary btn--sm">Register</a>
-            {% endif %}
-        </div>
-    </div>
-</nav>
-
-<!-- ══════════════════════════ MAIN ══════════════════════════ -->
-<main>
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="wrap" style="padding-top: 80px;">
-                <div class="flash-wrap">
-                    {% for category, message in messages %}
-                        <div class="flash-msg flash-{{ 'success' if category == 'success' else ('warning' if category == 'warning' else ('danger' if category == 'danger' else 'info')) }}">
-                            {% if category == 'success' %}
-                                <svg width="15" height="15" style="flex-shrink:0;margin-top:2px;"><use href="#ico-check"/></svg>
-                            {% elif category == 'warning' %}
-                                <svg width="15" height="15" style="flex-shrink:0;margin-top:2px;"><use href="#ico-alert"/></svg>
-                            {% else %}
-                                <svg width="15" height="15" style="flex-shrink:0;margin-top:2px;"><use href="#ico-x"/></svg>
-                            {% endif %}
-                            <span>{{ message }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    {% block content %}{% endblock %}
-</main>
-
-<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
-<footer class="site-footer">
-    <div class="wrap footer-inner">
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <a href="{{ url_for('main.index') }}" class="brand brand--light">
-                    <svg class="brand__mark" width="14" height="24" viewBox="604 292 790 1410" aria-hidden="true" style="width:14px;height:24px;max-width:14px;max-height:24px;flex-shrink:0;">
-                        <path fill="#2211FF" d="M676 914 L676 621.5 A329.5 329.5 0 0 1 1335 621.5 L1335 914 A14 14 0 0 1 1321 928 L690 928 A14 14 0 0 1 676 914 Z"/>
-                        <path fill="#2211FF" d="M604 1010 L1394 1010 L999 1702 Z"/>
+    <header class="container">
+        <nav class="phishield-nav">
+            <a href="{{ url_for('main.index') }}" class="brand-container">
+                <span class="brand-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
                     </svg>
-                    Phishield
-                </a>
-                <p>Explainable phishing URL detection — 13 heuristic rules and Random Forest ML. Never connects to target URLs.</p>
+                </span>
+                <div class="brand-text">
+                    <span class="brand-title">Phishield</span>
+                    <span class="brand-tagline">Explainable Phishing URL Detection</span>
+                </div>
+            </a>
+
+            <ul class="nav-links-list">
+                <li><a href="{{ url_for('main.scan') }}" {% if request.endpoint == 'main.scan' %}class="active"{% endif %}>Inspect Link</a></li>
+                <li><a href="{{ url_for('main.about') }}" {% if request.endpoint == 'main.about' %}class="active"{% endif %}>Methodology</a></li>
+                <li><a href="{{ url_for('main.privacy') }}" {% if request.endpoint == 'main.privacy' %}class="active"{% endif %}>Privacy &amp; LSEPI</a></li>
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('main.history') }}" {% if request.endpoint == 'main.history' %}class="active"{% endif %}>History</a></li>
+                    <li><a href="{{ url_for('auth.account') }}" {% if request.endpoint == 'auth.account' %}class="active"{% endif %}>Account</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}" {% if request.endpoint == 'auth.login' %}class="active"{% endif %}>Sign In</a></li>
+                    <li><a href="{{ url_for('auth.register') }}" class="contrast" {% if request.endpoint == 'auth.register' %}class="active"{% endif %}>Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Flash Feedback Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="advisory-card {% if category == 'danger' or category == 'error' %}danger{% elif category == 'warning' %}warning{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="phishield-footer container">
+        <div class="footer-columns">
+            <div>
+                <strong style="color: #0f172a; font-size: 1rem;">Phishield Framework</strong>
+                <p style="margin: 0.5rem 0 0; color: #475569; font-size: 0.88rem; line-height: 1.6;">
+                    An explainable phishing detection web application combining 13 transparent URL structural heuristic rules (40%) and Random Forest machine learning (60%). Developed under the British Computer Society (BCS) Code of Conduct and UK GDPR data minimisation standards.
+                </p>
             </div>
-            <div class="footer-col">
-                <h6>App</h6>
-                <ul>
-                    <li><a href="{{ url_for('main.scan') }}">Inspect a Link</a></li>
-                    <li><a href="{{ url_for('main.about') }}">Methodology</a></li>
-                    {% if session.get('user_id') %}
-                        <li><a href="{{ url_for('main.history') }}">History</a></li>
-                        <li><a href="{{ url_for('auth.account') }}">Account</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
-                        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                    {% endif %}
+            <div>
+                <strong style="color: #0f172a; display: block; margin-bottom: 0.5rem;">Documentation</strong>
+                <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+                    <li><a href="{{ url_for('main.about') }}">13 Heuristic Rules</a></li>
+                    <li><a href="{{ url_for('main.privacy') }}">LSEPI &amp; Privacy Disclosures</a></li>
+                    <li><a href="{{ url_for('main.report_wrong_result') }}">Report Misclassification</a></li>
                 </ul>
             </div>
-            <div class="footer-col">
-                <h6>Legal</h6>
-                <ul>
-                    <li><a href="{{ url_for('main.privacy') }}">Privacy Policy</a></li>
-                    <li><a href="{{ url_for('main.report_wrong_result') }}">Report Discrepancy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h6>UK Reporting</h6>
-                <ul>
-                    <li><a href="mailto:report@phishing.gov.uk">Phishing Emails (NCSC)</a></li>
-                    <li>SMS Scams → text <strong style="color:#fff;">7726</strong></li>
-                    <li><a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener">Action Fraud UK</a></li>
+            <div>
+                <strong style="color: #0f172a; display: block; margin-bottom: 0.5rem;">UK Threat Reporting</strong>
+                <ul style="list-style: none; padding: 0; margin: 0; line-height: 2; font-size: 0.85rem;">
+                    <li>Email: <a href="mailto:report@phishing.gov.uk">report@phishing.gov.uk</a> (NCSC)</li>
+                    <li>SMS Scams: Forward to <strong>7726</strong></li>
+                    <li>Financial Fraud: <a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener">Action Fraud UK</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <span>&copy; 2026 Phishield &bull; UK GDPR &amp; DUAA 2025 Compliant &bull; CMA 1990</span>
-            <span>No connections to target URLs. Ever.</span>
+            <span>&copy; 2026 Nottingham Trent University FYP (N1427018) &bull; UK GDPR &amp; DUAA 2025 &bull; CMA 1990</span>
+            <span>Zero-Click Offline Safety: Target links are never fetched or visited.</span>
         </div>
-    </div>
-</footer>
+    </footer>
 
-<!-- Scrolled nav effect (pure JS, no deps) -->
-<script>
-(function(){
-  var bar = document.getElementById('nav-bar');
-  function tick() { bar.classList.toggle('is-scrolled', window.scrollY > 20); }
-  window.addEventListener('scroll', tick, {passive: true});
-  tick();
-})();
-</script>
-{% block scripts %}{% endblock %}
 </body>
 </html>
