@@ -32,7 +32,15 @@ def get_db_connection(db_path: str = None) -> sqlite3.Connection:
     if db_path is None:
         db_path = os.environ.get('PHISHIELD_DB_PATH', DEFAULT_DB_PATH)
 
-    conn = sqlite3.connect(db_path, timeout=10.0)
+    try:
+        conn = sqlite3.connect(db_path, timeout=10.0)
+    except sqlite3.OperationalError:
+        # Fallback for serverless/read-only container environments
+        fallback_path = os.path.join('/tmp', 'phishield.db')
+        try:
+            conn = sqlite3.connect(fallback_path, timeout=10.0)
+        except Exception:
+            conn = sqlite3.connect(':memory:', timeout=10.0)
     conn.row_factory = sqlite3.Row
     
     # Performance & Concurrency Hardening

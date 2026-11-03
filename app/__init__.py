@@ -49,6 +49,19 @@ def create_app(config_class=Config):
         response.headers['X-XSS-Protection'] = '1; mode=block'
         return response
 
+    # Error Diagnostic Middleware for Serverless Debugging
+    import traceback
+    original_wsgi = app.wsgi_app
+    def debug_wsgi(environ, start_response):
+        try:
+            return original_wsgi(environ, start_response)
+        except Exception:
+            err = traceback.format_exc()
+            print("CRITICAL SERVERLESS EXCEPTION:\n", err)
+            start_response('500 Internal Server Error', [('Content-Type', 'text/plain; charset=utf-8')])
+            return [f"Serverless Traceback:\n\n{err}".encode('utf-8')]
+    app.wsgi_app = debug_wsgi
+
     return app
 
 
