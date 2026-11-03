@@ -6,7 +6,8 @@ import os
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'phishield-secret-key-production-grade-2026')
-    DATABASE_PATH = os.environ.get('PHISHIELD_DB_PATH', os.path.join(os.path.dirname(__file__), '..', 'phishield.db'))
+    _default_db = '/tmp/phishield.db' if os.environ.get('VERCEL') else os.path.join(os.path.dirname(__file__), '..', 'phishield.db')
+    DATABASE_PATH = os.environ.get('PHISHIELD_DB_PATH', _default_db)
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_SECURE = os.environ.get('FLASK_ENV') == 'production'
