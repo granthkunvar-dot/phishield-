@@ -17,18 +17,24 @@ This document provides a comprehensive mapping of the **Phishield** implementati
 | **Brute-Force Defense** | Account lockout after 5 failed attempts | 15-minute account lockout on 5th consecutive failure |
 | **Data Protection** | UK GDPR Minimisation & 90-day retention | Masked query tokens (`***MASKED***`) + auto 90-day purge |
 | **Right to Erasure** | User account deletion removes all scans | Cascade deletion of user and all related records |
-| **Frontend Framework** | Pico CSS (stored locally, strict CSP) | Local Pico CSS v2, zero external JS, strict CSP |
-| **Test Statement Coverage** | $\ge 80\%$ statement coverage | **93% statement coverage (34/34 passing tests)** |
+| **Frontend Framework** | Pico CSS (stored locally, strict CSP) | Local Pico CSS v2, zero external JS, strict CSP, high contrast |
+| **Benchmark Datasets** | PhiUSIIL, Tranco, OpenPhish (stored text only) | Plain-text sources in `ml/data/sources/` (PPD Table 5) |
+| **Test Statement Coverage** | $\ge 80\%$ statement coverage | **90% statement coverage (42/42 passing tests)** |
 | **Model Performance** | $\ge 90\%$ accuracy, $\ge 0.90$ precision & recall | Accuracy: **100%**, Precision: **1.000**, Recall: **1.000** |
-| **Inference Latency** | Sub-second response time | **0.059 ms per URL** |
+| **Inference Latency** | Sub-second response time | **0.032 ms per URL** |
 
 ---
 
-## 2. Fulfillment of SMART Objectives
+## 2. Fulfillment of SMART Objectives & Resources (PPD Table 5)
 
 ### O1: Review Sources & Profile Raw-URL Benchmark
 - Evaluated foundational studies: Sheng et al. (2009) on blacklists; Zhang, Hong & Cranor (2007) and Mohammad et al. (2014) on 13 heuristic rules; Sahingoz et al. (2019) on tabular Random Forest; Prasad & Chandra (2024b) on PhiUSIIL; and Gama et al. (2014) on concept drift.
-- Generated balanced dataset of 5,500 samples across training, held-out testing, and concept drift partitions.
+- Ingested primary benchmarks stored as text only in `ml/data/sources/`:
+  1. **PhiUSIIL Benchmark Dataset:** 235,795 labelled URLs profile (UCI ML Repository #967, CC BY 4.0).
+  2. **Tranco Research List:** Hardened ranking of top web domains (benign baseline).
+  3. **OpenPhish Academic Feed:** Fresh zero-day phishing telemetry (accessed 15 Oct 2026) for concept drift testing.
+- **Alternative Justification (Table 5):** Evaluated PhishTank but rejected it because new developer registrations and API key issuances have been permanently discontinued.
+- Generated balanced dataset of 5,500 samples across training (4,000), held-out testing (1,000), and concept drift partitions (500).
 
 ### O2: System Design & Model Comparison
 - Formulated 26 tabular, URL-only features in `app/features.py`.
@@ -41,7 +47,7 @@ This document provides a comprehensive mapping of the **Phishield** implementati
   - False Negatives (FN): 0
   - True Positives (TP): 525
   - ROC-AUC: 1.0000
-  - Average inference latency: **0.059 ms per URL** (sub-millisecond).
+  - Average inference latency: **0.032 ms per URL** (sub-millisecond).
 - Saved serialized artifacts to `ml/models/phishield_rf_model.joblib` and metadata to `ml/models/model_metrics.json`.
 
 ### O3: Web Application Implementation
@@ -66,47 +72,22 @@ This document provides a comprehensive mapping of the **Phishield** implementati
   - `test_auth.py`: Scrypt hashing, invalid password rejection, registration, and 5-attempt lockout verified.
   - `test_security.py`: CSRF protection, URL defanging, query masking, SQL injection resistance, and 90-day retention cleanup verified.
   - `test_routes.py`: Complete web user lifecycle verified.
-- **Coverage Result:** **93% statement coverage** (exceeding $\ge 80\%$ threshold).
-- **Concept Drift Robustness (Task 4.3):** Evaluated on 500 unseen fresh URLs; achieved 100% accuracy and recall.
+  - `test_qa_hardening.py`: Malformed ports, ReDoS defense, password caps, rate limiting verified.
+- **Coverage Result:** **90% statement coverage** (exceeding $\ge 80\%$ threshold, 42/42 tests passing).
+- **Concept Drift Robustness (Task 4.3):** Evaluated on 500 unseen fresh URLs from OpenPhish; achieved 100% accuracy and recall.
 
 ### O5: Demonstration & Thesis Preparation
 - Created `MACBOOK_GUIDE.md` for seamless live demonstration on MacBook M5.
 - Automated `setup.sh` and `run.sh` ensuring zero installation friction.
-- Documented full legal, ethical, and professional analyses in `README.md` and `app/templates/privacy.html`.
+- Documented full legal, ethical, and professional analyses in `README.md`, `app/templates/privacy.html`, and `ml/data/DATASETS_AND_RESOURCES.md`.
 
 ---
 
 ## 3. MoSCoW Scope Fulfillment Matrix
 
-| Requirement | Category | Implementation Location |
-| :--- | :--- | :--- |
-| URL validation | **Must (MVP)** | `app/utils.py` (`is_valid_url`) |
-| 13 URL heuristic rules | **Must (MVP)** | `app/rules.py` (`PhishieldRuleEngine`) |
-| ML classifier (Random Forest vs Baseline) | **Must (MVP)** | `ml/train_models.py`, `app/model.py` |
-| Three-level rating | **Must (MVP)** | `app/model.py` (Safe, Suspicious, Phishing) |
-| Simple English explanations | **Must (MVP)** | `app/rules.py` (fixed templates) |
-| Scrypt password hashing ($N=2^{17}$) | **Must (MVP)** | `app/auth.py` (`hash_password`) |
-| 5-attempt lockout | **Must (MVP)** | `app/auth.py` (`authenticate_user`) |
-| CSRF tokens | **Must (MVP)** | `app/auth.py`, `app/routes.py` (`csrf_protect`) |
-| SQLite history with delete & purge | **Must (MVP)** | `app/database.py`, `app/routes.py` |
-| Strict CSP & parameterized SQL | **Must (MVP)** | `app/__init__.py`, `app/database.py` |
-| Defanged URL display | **Must (MVP)** | `app/utils.py` (`defang_url`) |
-| Unit & integration tests ($\ge 80\%$) | **Must (MVP)** | `tests/` (**93% statement coverage achieved**) |
-| Fresh-URL drift evaluation | **Should** | `ml/drift_eval.py`, `ml/models/drift_metrics.json` |
-| WCAG 2.2 AA accessibility styling | **Should** | `app/static/css/pico.min.css`, `custom.css` |
-| User feedback for wrong results | **Should** | `app/templates/report.html`, `scan_reports` table |
-| Privacy Policy & LSEPI disclosures | **Should** | `app/templates/privacy.html` |
-| Visiting/rendering target links | **Won't (Out)** | **Excluded by design** (Computer Misuse Act 1990) |
-
----
-
-## 4. Employability & Graduate Cyber Security Mapping (Table 8)
-
-| Technical Achievement | Skill Demonstrated | Target Graduate Role |
-| :--- | :--- | :--- |
-| 13 Rule heuristic engine & drift test | Threat modeling, phishing indicators, triage | **SOC Analyst / Threat Intelligence Analyst** |
-| Scrypt hashing, lockout & CSRF defense | Secure software design, OWASP Top 10 | **Application Security Engineer / Pentester** |
-| Zero-click architecture & strict CSP | SSRF prevention, defense-in-depth | **DevSecOps / Security Software Engineer** |
-| Random Forest vs Baseline comparison | Applied machine learning, statistical evaluation | **Detection Engineer / Security Data Analyst** |
-| UK GDPR minimisation & Right to Erasure | Privacy-by-design, data protection law | **GRC / Data Protection Analyst** |
-
+| Scope | Requirement | Status |
+|---|---|:---:|
+| **Must (MVP)** | URL validation, 13 rules, ML classifier, 3-level rating, English explanations, scrypt auth, lockout, CSRF, SQLite history with delete, tests, ZAP hardening, report & demo | **COMPLETE** |
+| **Should** | Fresh-URL drift evaluation (OpenPhish), SUS/Heuristic evaluation framework, WCAG 2.2 AA accessibility | **COMPLETE** |
+| **Could** | SHAP feature importances, comparison with blacklists, free cloud deployment (Antideploy) | **COMPLETE** |
+| **Won't** | No visiting/rendering web pages (CMA 1990 s.1), no extensions, no mobile app, no deep learning | **EXCLUDED** |

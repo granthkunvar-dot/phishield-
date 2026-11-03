@@ -1,5 +1,5 @@
 {
-  "training_date": "2026-11-01 14:38:51",
+  "training_date": "2026-11-03 12:29:24",
   "dataset": {
     "train_samples": 4000,
     "test_samples": 1000,
@@ -39,7 +39,7 @@
     "recall": 1.0,
     "f1_score": 1.0,
     "roc_auc": 1.0,
-    "training_time_sec": 0.588
+    "training_time_sec": 0.255
   },
   "random_forest": {
     "accuracy": 1.0,
@@ -47,8 +47,8 @@
     "recall": 1.0,
     "f1_score": 1.0,
     "roc_auc": 1.0,
-    "avg_latency_ms": 0.059,
-    "training_time_sec": 0.185,
+    "avg_latency_ms": 0.032,
+    "training_time_sec": 0.102,
     "confusion_matrix": {
       "true_negative": 475,
       "false_positive": 0,
@@ -58,43 +58,43 @@
     "top_features": [
       {
         "feature": "is_https",
-        "importance": 0.1379
+        "importance": 0.1429
       },
       {
         "feature": "ratio_digits_url",
-        "importance": 0.1141
-      },
-      {
-        "feature": "entropy_host",
-        "importance": 0.0906
-      },
-      {
-        "feature": "has_shortener",
-        "importance": 0.0767
-      },
-      {
-        "feature": "length_hostname",
-        "importance": 0.0729
+        "importance": 0.1294
       },
       {
         "feature": "length_query",
-        "importance": 0.0686
+        "importance": 0.0858
+      },
+      {
+        "feature": "has_shortener",
+        "importance": 0.0856
+      },
+      {
+        "feature": "entropy_host",
+        "importance": 0.0762
+      },
+      {
+        "feature": "length_hostname",
+        "importance": 0.0706
       },
       {
         "feature": "count_digits",
-        "importance": 0.0634
+        "importance": 0.0623
       },
       {
-        "feature": "length_path",
-        "importance": 0.0489
-      },
-      {
-        "feature": "count_underscores",
-        "importance": 0.0471
+        "feature": "entropy_url",
+        "importance": 0.0504
       },
       {
         "feature": "length_url",
-        "importance": 0.0394
+        "importance": 0.0392
+      },
+      {
+        "feature": "count_hyphens",
+        "importance": 0.0336
       }
     ]
   },

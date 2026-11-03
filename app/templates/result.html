@@ -17,11 +17,11 @@
     <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
             <!-- test-anchor: Inspection Assessment -->
-            <h1 style="font-size: 1.85rem; font-weight: 800; margin: 0;">Inspection Assessment</h1>
+            <h1 style="font-size: 1.85rem; font-weight: 800; margin: 0; color: var(--heading-color);">Inspection Assessment</h1>
             <small style="color: var(--muted-color);">Timestamp: {{ scan_time or 'Just now' }} &bull; Passive Heuristic &amp; Machine Learning Analysis</small>
         </div>
         <div>
-            <a href="{{ url_for('main.scan') }}" role="button" class="outline" style="padding: 0.4rem 1rem; font-size: 0.88rem;">Inspect Another Link</a>
+            <a href="{{ url_for('main.scan') }}" role="button" class="outline" style="padding: 0.4rem 1rem; font-size: 0.88rem; font-weight: 700;">Inspect Another Link</a>
         </div>
     </div>
 
@@ -30,13 +30,13 @@
         <div style="display: inline-flex; align-items: center; gap: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 700;">
             {% if r_rating == 'safe' %}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                Assessment Level: Low Risk
+                ASSESSMENT LEVEL: LOW RISK
             {% elif r_rating == 'suspicious' %}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                Assessment Level: Moderate Suspicion
+                ASSESSMENT LEVEL: MODERATE SUSPICION
             {% else %}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Assessment Level: High Threat
+                ASSESSMENT LEVEL: HIGH THREAT
             {% endif %}
         </div>
 
@@ -72,41 +72,43 @@
     </div>
 
     <!-- Decision Weights Breakdown (PPD Table 4 & Table 5: 40% Rules + 60% ML) -->
-    <div class="decision-grid">
-        <div class="decision-card">
-            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <strong style="font-size: 0.95rem;">Structural Heuristics (40% Weight)</strong>
-                <span style="font-weight: 800; font-size: 1.1rem; color: var(--primary);">{{ "%.1f"|format(r_rules_score * 100) }}%</span>
+    <div class="grid" style="gap: 1.25rem; margin-bottom: 2rem;">
+        <article style="padding: 1.25rem; margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                <span class="dataset-badge">Layer 1 &bull; 40% Weight</span>
+                <span style="font-weight: 800; font-size: 1.15rem; color: var(--primary);">{{ "%.1f"|format(r_rules_score * 100) }}%</span>
             </div>
-            <div class="decision-meter">
-                <div class="decision-meter-fill" style="width: {{ r_rules_score * 100 }}%; background: {% if r_rules_score > 0.6 %}var(--danger-accent){% elif r_rules_score > 0.3 %}var(--warn-accent){% else %}var(--safe-accent){% endif %};"></div>
+            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.4rem;">13 Structural Heuristics</strong>
+            <div class="decision-meter-bar" style="margin-bottom: 0.5rem;">
+                <div class="decision-meter-fill" style="width: {{ r_rules_score * 100 }}%; background: {% if r_rules_score > 0.6 %}#dc2626{% elif r_rules_score > 0.3 %}#d97706{% else %}#059669{% endif %};"></div>
             </div>
-            <small style="color: var(--muted-color); display: block;">13 transparent deterministic rules grounded in empirical cybersecurity studies.</small>
-        </div>
+            <small style="color: var(--muted-color); display: block; line-height: 1.4;">13 transparent deterministic rules grounded in empirical cybersecurity literature.</small>
+        </article>
 
-        <div class="decision-card">
-            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <strong style="font-size: 0.95rem;">Random Forest ML (60% Weight)</strong>
-                <span style="font-weight: 800; font-size: 1.1rem; color: var(--primary);">{{ "%.1f"|format(r_ml_score * 100) }}%</span>
+        <article style="padding: 1.25rem; margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                <span class="dataset-badge" style="background: #059669;">Layer 2 &bull; 60% Weight</span>
+                <span style="font-weight: 800; font-size: 1.15rem; color: var(--primary);">{{ "%.1f"|format(r_ml_score * 100) }}%</span>
             </div>
-            <div class="decision-meter">
+            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.4rem;">Random Forest ML Model</strong>
+            <div class="decision-meter-bar" style="margin-bottom: 0.5rem;">
                 <div class="decision-meter-fill" style="width: {{ r_ml_score * 100 }}%; background: {% if r_ml_score > 0.6 %}#dc2626{% elif r_ml_score > 0.3 %}#d97706{% else %}#059669{% endif %};"></div>
             </div>
-            <small style="color: var(--muted-color); display: block;">Trained on 26 structural URL features using the PhiUSIIL benchmark (Prasad &amp; Chandra, 2024a).</small>
-        </div>
+            <small style="color: var(--muted-color); display: block; line-height: 1.4;">Trained on 26 tabular features from the PhiUSIIL and Tranco benchmarks.</small>
+        </article>
     </div>
 
     <!-- 13 Transparent Structural Rules Table -->
-    <article style="box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); margin-bottom: 2rem;">
-        <header>
+    <article style="margin-bottom: 2rem;">
+        <header style="margin-bottom: 1rem;">
             <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800;">13 Transparent Heuristic Indicators Breakdown</h3>
-            <p style="margin: 0.25rem 0 0; color: var(--text-muted); font-size: 0.85rem;">
+            <p style="margin: 0.25rem 0 0; color: var(--muted-color); font-size: 0.85rem;">
                 Every rule is evaluated deterministically so non-technical users understand exactly why a rating was assigned.
             </p>
         </header>
 
         <div style="overflow-x: auto;">
-            <table class="rules-table">
+            <table>
                 <thead>
                     <tr>
                         <th style="width: 10%;">ID</th>
@@ -117,8 +119,8 @@
                 </thead>
                 <tbody>
                     {% for r in r_breakdown %}
-                    <tr style="{% if r.triggered %}background: var(--danger-bg);{% endif %}">
-                        <td><strong>{{ r.rule_id }}</strong></td>
+                    <tr style="{% if r.triggered %}background: var(--surface-subtle);{% endif %}">
+                        <td><strong>{{ r.id or r.rule_id }}</strong></td>
                         <td>{{ r.name }}</td>
                         <td>
                             {% if r.triggered %}
@@ -127,7 +129,7 @@
                                 <span class="rule-badge clear">Clear</span>
                             {% endif %}
                         </td>
-                        <td style="font-size: 0.88rem; color: {% if r.triggered %}var(--danger-accent){% else %}var(--body-color){% endif %};">
+                        <td style="font-size: 0.88rem;">
                             {{ r.explanation }}
                         </td>
                     </tr>
@@ -140,18 +142,18 @@
     <!-- Post-Analysis Actions & Responsible Reporting (PPD Section 8.1 & 8.4) -->
     <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
         <div>
-            <a href="{{ url_for('main.report_wrong_result', scan_id=scan_id, url=r_url, rating=r_rating) }}" role="button" class="contrast outline" style="font-size: 0.9rem;">
+            <a href="{{ url_for('main.report_wrong_result', scan_id=scan_id, url=r_url, rating=r_rating) }}" role="button" class="contrast outline" style="font-size: 0.9rem; font-weight: 700;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 0.35rem;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 Report a Wrong Result (False Alarm / Missed Threat)
             </a>
         </div>
         <div>
-            <a href="{{ url_for('main.scan') }}" role="button">Inspect Another Link</a>
+            <a href="{{ url_for('main.scan') }}" role="button" style="font-weight: 700;">Inspect Another Link</a>
         </div>
     </div>
 
     <!-- Official UK Threat Reporting Notice -->
-    <div class="advisory-card" style="font-size: 0.85rem;">
+    <div class="advisory-box" style="font-size: 0.85rem;">
         <strong>Official UK Cyber Threat Escalation (PPD Section 8.4):</strong>
         If you received this link in an unsolicited email, forward the message to the National Cyber Security Centre (NCSC) at <a href="mailto:report@phishing.gov.uk">report@phishing.gov.uk</a>. For fraudulent SMS messages, forward to <strong>7726</strong>. If you suffered financial loss, report to <a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener">Action Fraud UK</a>.
     </div>

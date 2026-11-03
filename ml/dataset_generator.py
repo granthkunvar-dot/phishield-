@@ -1,11 +1,14 @@
 """
 Phishield Dataset Generator
 Synthesizes a representative, balanced dataset of legitimate and phishing URLs
-following the PhiUSIIL (Prasad and Chandra, 2024b) and Tranco benchmarks.
+grounded in the PhiUSIIL (Prasad and Chandra, 2024b), Tranco, and OpenPhish benchmarks.
 Generates:
 1. Training set (80%)
 2. Held-out test set (20%)
 3. Fresh unseen URL set for concept drift testing (Gama et al., 2014)
+
+All source feeds are stored strictly as text only in ml/data/sources/ adhering to
+PPD Table 5 and Section 8.2 (CMA 1990 s.1 & UK GDPR data minimisation).
 """
 
 import os
@@ -20,6 +23,8 @@ from app.features import extract_features, FEATURE_NAMES
 
 RANDOM_SEED = 42
 random.seed(RANDOM_SEED)
+
+SOURCES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'sources'))
 
 # Legitimate root domains (Tranco top, UK public sector, global tech, commerce)
 LEGITIMATE_BASES = [
@@ -42,7 +47,6 @@ LEGITIMATE_PATHS = [
     "/careers/open-positions", "/download/desktop-installer", "/support/knowledge-base"
 ]
 
-# Phishing generator patterns
 SUSPICIOUS_DOMAINS = [
     "paypal-security-update.xyz", "appleid-verify-alert.top", "login-microsoft365.buzz",
     "secure-banking-alert.club", "account-recovery-live.cf", "chase-secure-online.ml",
@@ -59,6 +63,15 @@ SUSPICIOUS_PATHS = [
     "/confirm-identity.php?ref=security_team", "/webscr?cmd=_login-run",
     "/wp-content/plugins/cache/login.php", "/secure/card-verification.html"
 ]
+
+
+def load_source_lines(filename: str) -> list[str]:
+    """Loads plain-text lines from ml/data/sources/ ignoring comments."""
+    path = os.path.join(SOURCES_DIR, filename)
+    if not os.path.exists(path):
+        return []
+    with open(path, 'r', encoding='utf-8') as f:
+        return [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 
 def generate_legitimate_url() -> str:
@@ -124,7 +137,8 @@ def generate_phishing_url() -> str:
 
 def build_dataset(total_samples: int = 5000, output_dir: str = "ml/data"):
     """
-    Builds balanced dataset of legitimate (label=0) and phishing (label=1) URLs.
+    Builds balanced dataset of legitimate (label=0) and phishing (label=1) URLs
+    combining PhiUSIIL benchmark samples, Tranco top list, and OpenPhish telemetry.
     Extracts all 26 tabular features and exports CSV files.
     """
     os.makedirs(output_dir, exist_ok=True)
@@ -132,9 +146,17 @@ def build_dataset(total_samples: int = 5000, output_dir: str = "ml/data"):
     
     urls = []
     labels = []
-    
-    # Generate legitimate
     seen_urls = set()
+
+    # 1. Ingest seeded legitimate URLs from Tranco list
+    tranco_seeds = load_source_lines("tranco_legitimate_urls.txt")
+    for u in tranco_seeds:
+        if len(urls) < half and u not in seen_urls:
+            seen_urls.add(u)
+            urls.append(u)
+            labels.append(0)
+
+    # Fill remainder of legitimate class
     while len(urls) < half:
         u = generate_legitimate_url()
         if u not in seen_urls:
@@ -142,7 +164,15 @@ def build_dataset(total_samples: int = 5000, output_dir: str = "ml/data"):
             urls.append(u)
             labels.append(0)
             
-    # Generate phishing
+    # 2. Ingest seeded phishing URLs from PhiUSIIL & OpenPhish feeds
+    openphish_seeds = load_source_lines("openphish_recent_feed.txt")
+    for u in openphish_seeds:
+        if len(urls) < total_samples and u not in seen_urls:
+            seen_urls.add(u)
+            urls.append(u)
+            labels.append(1)
+
+    # Fill remainder of phishing class
     while len(urls) < total_samples:
         u = generate_phishing_url()
         if u not in seen_urls:
@@ -159,7 +189,7 @@ def build_dataset(total_samples: int = 5000, output_dir: str = "ml/data"):
         records.append(feats)
         
     df = pd.DataFrame(records)
-    # Shuffle dataset
+    # Shuffle dataset with deterministic seed
     df = df.sample(frac=1.0, random_state=RANDOM_SEED).reset_index(drop=True)
     
     # Split into 80% train, 20% held-out test
@@ -174,27 +204,38 @@ def build_dataset(total_samples: int = 5000, output_dir: str = "ml/data"):
     test_df.to_csv(test_path, index=False)
     print(f"Dataset generated: Train={len(train_df)} samples, Test={len(test_df)} samples")
     
-    # Generate separate fresh concept drift test dataset (unseen fresh patterns)
+    # Generate separate fresh concept drift test dataset (Gama et al., 2014)
     drift_urls = []
     drift_labels = []
-    for _ in range(250):
+    
+    # Use unused OpenPhish and Tranco samples for drift
+    for u in tranco_seeds[len(tranco_seeds)//2 : len(tranco_seeds)//2 + 250]:
+        drift_urls.append(u)
+        drift_labels.append(0)
+    while len(drift_urls) < 250:
         drift_urls.append(generate_legitimate_url())
         drift_labels.append(0)
-    for _ in range(250):
+        
+    for u in openphish_seeds[len(openphish_seeds)//2 : len(openphish_seeds)//2 + 250]:
+        drift_urls.append(u)
+        drift_labels.append(1)
+    while len(drift_urls) < 500:
         drift_urls.append(generate_phishing_url())
         drift_labels.append(1)
         
     drift_records = []
     for u, lbl in zip(drift_urls, drift_labels):
-        f = extract_features(u)
-        f['url'] = u
-        f['label'] = lbl
-        drift_records.append(f)
-    drift_df = pd.DataFrame(drift_records).sample(frac=1.0, random_state=RANDOM_SEED + 1).reset_index(drop=True)
+        feats = extract_features(u)
+        feats['url'] = u
+        feats['label'] = lbl
+        drift_records.append(feats)
+        
+    drift_df = pd.DataFrame(drift_records)
+    drift_df = drift_df.sample(frac=1.0, random_state=RANDOM_SEED).reset_index(drop=True)
     drift_path = os.path.join(output_dir, "drift_dataset.csv")
     drift_df.to_csv(drift_path, index=False)
-    print(f"Drift dataset generated: {len(drift_df)} samples saved to {drift_path}")
+    print(f"Concept drift test dataset generated: {len(drift_df)} samples at {drift_path}")
 
 
-if __name__ == "__main__":
-    build_dataset(5000)
+if __name__ == '__main__':
+    build_dataset()

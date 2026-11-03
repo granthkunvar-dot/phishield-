@@ -9,7 +9,7 @@
     <!-- Pinned Local Pico CSS (PPD Table 5 / OWASP A03 / WCAG 2.2 AA) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pico.min.css') }}">
     <!-- Academic Enhancements (High contrast WCAG 2.2 AA in both light & dark mode) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}?v=6.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}?v=7.0">
 </head>
 <body>
 
@@ -31,7 +31,7 @@
             </ul>
             <ul>
                 <li><a href="{{ url_for('main.scan') }}" {% if request.endpoint == 'main.scan' %}class="contrast"{% endif %}>Inspect Link</a></li>
-                <li><a href="{{ url_for('main.about') }}" {% if request.endpoint == 'main.about' %}class="contrast"{% endif %}>Methodology</a></li>
+                <li><a href="{{ url_for('main.about') }}" {% if request.endpoint == 'main.about' %}class="contrast"{% endif %}>Methodology &amp; Datasets</a></li>
                 <li><a href="{{ url_for('main.privacy') }}" {% if request.endpoint == 'main.privacy' %}class="contrast"{% endif %}>Privacy &amp; LSEPI</a></li>
                 {% if session.get('user_id') %}
                     <li><a href="{{ url_for('main.history') }}" {% if request.endpoint == 'main.history' %}class="contrast"{% endif %}>History</a></li>
@@ -60,18 +60,19 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="container" style="border-top: 1px solid var(--muted-border-color, #e2e8f0); margin-top: 4rem; padding-top: 2rem; padding-bottom: 3rem;">
+    <footer class="container" style="border-top: 1px solid var(--card-border-color); margin-top: 4rem; padding-top: 2rem; padding-bottom: 3rem;">
         <div class="grid">
             <div>
                 <strong>Phishield Framework</strong>
                 <p style="margin: 0.5rem 0 0; font-size: 0.85rem; color: var(--muted-color);">
-                    Explainable phishing URL detection combining 13 transparent heuristic rules (40%) and Random Forest ML (60%). Developed under BCS Code of Conduct and UK GDPR data minimisation standards.
+                    Explainable phishing URL detection combining 13 transparent heuristic rules (40%) and Random Forest ML (60%). Grounded in the PhiUSIIL benchmark, Tranco list, and OpenPhish telemetry under UK GDPR data minimisation and CMA 1990 zero-click standards.
                 </p>
             </div>
             <div>
-                <strong>Documentation</strong>
+                <strong>Academic Resources</strong>
                 <ul style="list-style: none; padding: 0; margin: 0.5rem 0 0; font-size: 0.85rem; line-height: 2;">
                     <li><a href="{{ url_for('main.about') }}">13 Heuristic Rules</a></li>
+                    <li><a href="{{ url_for('main.about') }}">PhiUSIIL, Tranco &amp; OpenPhish</a></li>
                     <li><a href="{{ url_for('main.privacy') }}">LSEPI &amp; Privacy Disclosures</a></li>
                     <li><a href="{{ url_for('main.report_wrong_result') }}">Report Misclassification</a></li>
                 </ul>
@@ -85,7 +86,7 @@
                 </ul>
             </div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--muted-border-color, #e2e8f0); font-size: 0.78rem; color: var(--muted-color);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--card-border-color); font-size: 0.78rem; color: var(--muted-color);">
             <span>&copy; 2026 Nottingham Trent University FYP (N1427018) &bull; UK GDPR &amp; DUAA 2025 &bull; CMA 1990</span>
             <span>Zero-Click Offline Safety: Target links are never fetched or visited.</span>
         </div>
