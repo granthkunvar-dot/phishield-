@@ -8,30 +8,18 @@
 
 :root {
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --card-border-color: rgba(148, 163, 184, 0.25);
-  --muted-border-color: rgba(148, 163, 184, 0.25);
-  --surface-subtle: rgba(241, 245, 249, 0.6);
-  --surface-elevated: #ffffff;
-  --chip-bg: rgba(241, 245, 249, 0.9);
-  --chip-border: rgba(203, 213, 225, 0.8);
-  --chip-text: #1e293b;
-  --accent-glow: rgba(59, 130, 246, 0.12);
+  --card-border-color: rgba(71, 85, 105, 0.4);
+  --muted-border-color: rgba(71, 85, 105, 0.4);
+  --surface-subtle: rgba(15, 23, 42, 0.6);
+  --surface-elevated: #0f172a;
+  --chip-bg: rgba(30, 41, 59, 0.8);
+  --chip-border: rgba(71, 85, 105, 0.6);
+  --chip-text: #e2e8f0;
+  --accent-glow: rgba(59, 130, 246, 0.25);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --card-border-color: rgba(71, 85, 105, 0.4);
-    --muted-border-color: rgba(71, 85, 105, 0.4);
-    --surface-subtle: rgba(15, 23, 42, 0.6);
-    --surface-elevated: #0f172a;
-    --chip-bg: rgba(30, 41, 59, 0.8);
-    --chip-border: rgba(71, 85, 105, 0.6);
-    --chip-text: #e2e8f0;
-    --accent-glow: rgba(59, 130, 246, 0.25);
-  }
-}
-
-[data-theme="dark"] {
+[data-theme="dark"],
+:root {
   --card-border-color: rgba(71, 85, 105, 0.4);
   --muted-border-color: rgba(71, 85, 105, 0.4);
   --surface-subtle: rgba(15, 23, 42, 0.6);
