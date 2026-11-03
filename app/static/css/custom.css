@@ -1,52 +1,138 @@
 /* ==============================================================================
-   Phishield — Pinned Local Pico CSS Enhancements
+   Phishield — Unified Cross-Device Responsive & Accessible Stylesheet
    Strictly following Nottingham Trent University Project Proposal (N1427018_PPD)
    - Table 5: "SQLite and Pico CSS (stored locally) ... accessible styling with no JavaScript under a strict CSP"
-   - Section 8.1: WCAG 2.2 AA accessibility, zero external font/script dependencies
-   - Supports both Light and Dark themes natively via Pico CSS
+   - Locked Unified Dark Slate/Navy Theme for ALL devices (MacBook, Windows, iOS, Android)
+   - Fully responsive across mobile (320px+), tablet, and desktop screens
    ============================================================================== */
 
-:root {
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --card-border-color: rgba(71, 85, 105, 0.4);
-  --muted-border-color: rgba(71, 85, 105, 0.4);
-  --surface-subtle: rgba(15, 23, 42, 0.6);
-  --surface-elevated: #0f172a;
-  --chip-bg: rgba(30, 41, 59, 0.8);
-  --chip-border: rgba(71, 85, 105, 0.6);
-  --chip-text: #e2e8f0;
-  --accent-glow: rgba(59, 130, 246, 0.25);
-}
-
+/* 1. Global Forced Dark Slate Theme (Overrides all OS light mode settings) */
+:root,
+html,
+body,
 [data-theme="dark"],
-:root {
-  --card-border-color: rgba(71, 85, 105, 0.4);
-  --muted-border-color: rgba(71, 85, 105, 0.4);
-  --surface-subtle: rgba(15, 23, 42, 0.6);
-  --surface-elevated: #0f172a;
-  --chip-bg: rgba(30, 41, 59, 0.8);
+[data-theme="light"] {
+  color-scheme: dark !important;
+  background-color: #0b1120 !important;
+  color: #f1f5f9 !important;
+  
+  /* Pico CSS v2 dark theme variable overrides */
+  --pico-background-color: #0b1120 !important;
+  --pico-color: #f1f5f9 !important;
+  --pico-card-background-color: #111827 !important;
+  --pico-card-border-color: rgba(71, 85, 105, 0.45) !important;
+  --pico-border-color: rgba(71, 85, 105, 0.45) !important;
+  --pico-muted-color: #94a3b8 !important;
+  --pico-muted-border-color: rgba(71, 85, 105, 0.35) !important;
+  --pico-primary: #3b82f6 !important;
+  --pico-primary-background: #2563eb !important;
+  --pico-primary-hover: #1d4ed8 !important;
+  --pico-primary-underline: rgba(59, 130, 246, 0.5) !important;
+  --pico-form-element-background-color: #0f172a !important;
+  --pico-form-element-border-color: #334155 !important;
+  --pico-form-element-color: #f8fafc !important;
+  --pico-form-element-active-background-color: #0f172a !important;
+  --pico-form-element-active-border-color: #3b82f6 !important;
+  --pico-form-element-focus-color: rgba(59, 130, 246, 0.35) !important;
+  --pico-table-border-color: rgba(71, 85, 105, 0.4) !important;
+
+  /* Custom component tokens */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --card-border-color: rgba(71, 85, 105, 0.45);
+  --muted-border-color: rgba(71, 85, 105, 0.35);
+  --surface-subtle: rgba(15, 23, 42, 0.7);
+  --surface-elevated: #111827;
+  --chip-bg: rgba(30, 41, 59, 0.85);
   --chip-border: rgba(71, 85, 105, 0.6);
   --chip-text: #e2e8f0;
   --accent-glow: rgba(59, 130, 246, 0.25);
 }
 
-/* Base Card & Container Upgrades */
+/* Ensure body always renders dark background without white flash */
+html {
+  background-color: #0b1120 !important;
+}
+
+body {
+  background-color: #0b1120 !important;
+  color: #f1f5f9 !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+main.container {
+  flex: 1;
+}
+
+/* 2. Responsive Navigation */
+header.container {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+nav ul:first-child {
+  flex-shrink: 0;
+}
+
+nav ul li a {
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--border-radius, 6px);
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  display: inline-block;
+}
+
+nav ul li a:hover {
+  color: #ffffff;
+  background: var(--surface-subtle);
+}
+
+nav ul li a[role="button"] {
+  background: var(--pico-primary);
+  color: #ffffff !important;
+  padding: 0.35rem 0.85rem;
+}
+
+/* 3. Base Card & Container Upgrades */
 article {
+  background-color: #111827 !important;
   border: 1px solid var(--card-border-color) !important;
   border-radius: var(--border-radius, 10px) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 article:hover {
-  border-color: var(--primary) !important;
+  border-color: var(--pico-primary) !important;
 }
 
-/* Three-Level Rating Banners (Light Theme) */
+/* 4. Three-Level Rating Banners (Locked Accessible Dark Mode) */
 .rating-banner {
   border-radius: var(--border-radius, 12px);
-  padding: 2rem 1.5rem;
-  margin-bottom: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem) 1.25rem;
+  margin-bottom: 1.75rem;
   border: 2px solid;
   text-align: center;
   position: relative;
@@ -54,114 +140,59 @@ article:hover {
 }
 
 .rating-banner.safe {
-  background-color: #ecfdf5;
-  border-color: #059669;
-  color: #064e3b;
+  background-color: #022c22 !important;
+  border-color: #10b981 !important;
+  color: #ecfdf5 !important;
 }
 .rating-banner.safe .rating-cautious-explanation {
-  color: #047857;
+  color: #a7f3d0 !important;
 }
 
 .rating-banner.suspicious {
-  background-color: #fffbeb;
-  border-color: #d97706;
-  color: #78350f;
+  background-color: #451a03 !important;
+  border-color: #f59e0b !important;
+  color: #fffbeb !important;
 }
 .rating-banner.suspicious .rating-cautious-explanation {
-  color: #92400e;
+  color: #fde68a !important;
 }
 
 .rating-banner.phishing {
-  background-color: #fef2f2;
-  border-color: #dc2626;
-  color: #7f1d1d;
+  background-color: #450a0a !important;
+  border-color: #ef4444 !important;
+  color: #fef2f2 !important;
 }
 .rating-banner.phishing .rating-cautious-explanation {
-  color: #991b1b;
-}
-
-/* Three-Level Rating Banners (Dark Theme — High Contrast WCAG 2.2 AA) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .rating-banner.safe {
-    background-color: #022c22;
-    border-color: #10b981;
-    color: #ecfdf5;
-  }
-  :root:not([data-theme="light"]) .rating-banner.safe .rating-cautious-explanation {
-    color: #a7f3d0;
-  }
-
-  :root:not([data-theme="light"]) .rating-banner.suspicious {
-    background-color: #451a03;
-    border-color: #f59e0b;
-    color: #fffbeb;
-  }
-  :root:not([data-theme="light"]) .rating-banner.suspicious .rating-cautious-explanation {
-    color: #fde68a;
-  }
-
-  :root:not([data-theme="light"]) .rating-banner.phishing {
-    background-color: #450a0a;
-    border-color: #ef4444;
-    color: #fef2f2;
-  }
-  :root:not([data-theme="light"]) .rating-banner.phishing .rating-cautious-explanation {
-    color: #fecaca;
-  }
-}
-
-[data-theme="dark"] .rating-banner.safe {
-  background-color: #022c22;
-  border-color: #10b981;
-  color: #ecfdf5;
-}
-[data-theme="dark"] .rating-banner.safe .rating-cautious-explanation {
-  color: #a7f3d0;
-}
-
-[data-theme="dark"] .rating-banner.suspicious {
-  background-color: #451a03;
-  border-color: #f59e0b;
-  color: #fffbeb;
-}
-[data-theme="dark"] .rating-banner.suspicious .rating-cautious-explanation {
-  color: #fde68a;
-}
-
-[data-theme="dark"] .rating-banner.phishing {
-  background-color: #450a0a;
-  border-color: #ef4444;
-  color: #fef2f2;
-}
-[data-theme="dark"] .rating-banner.phishing .rating-cautious-explanation {
-  color: #fecaca;
+  color: #fecaca !important;
 }
 
 .rating-status-title {
-  font-size: 2.2rem;
+  font-size: clamp(1.4rem, 4.5vw, 2.2rem);
   font-weight: 800;
   margin: 0.5rem 0;
   letter-spacing: -0.02em;
   color: inherit !important;
+  line-height: 1.2;
 }
 
 .rating-cautious-explanation {
-  font-size: 1rem;
+  font-size: clamp(0.88rem, 2.5vw, 1rem);
   max-width: 680px;
   margin: 0.75rem auto 0;
   line-height: 1.6;
 }
 
-/* Defanged URL container (PPD Section 8.1 / Zero-click safety) */
+/* 5. Defanged URL container (Zero-Click Non-Clickable Safety) */
 .defanged-box {
-  background-color: #020617;
-  color: #38bdf8;
+  background-color: #030712 !important;
+  color: #38bdf8 !important;
   font-family: var(--font-mono);
-  padding: 1.15rem 1.35rem;
+  padding: 1rem 1.15rem;
   border-radius: var(--border-radius, 8px);
-  margin: 1.5rem 0;
+  margin: 1.25rem 0;
   word-break: break-all;
-  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+  font-size: clamp(0.82rem, 2.5vw, 0.95rem);
   text-align: left;
   border: 1px solid #1e293b;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
@@ -177,26 +208,27 @@ article:hover {
   margin-bottom: 0.45rem;
 }
 
-/* Academic Badges & Chips */
+/* 6. Academic Badges & Chips */
 .academic-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.95rem;
   background: var(--surface-subtle);
-  border: 1px solid var(--muted-border-color);
-  color: var(--primary);
+  border: 1px solid var(--card-border-color);
+  color: #60a5fa;
   border-radius: 9999px;
-  font-size: 0.8rem;
+  font-size: clamp(0.72rem, 2vw, 0.8rem);
   font-weight: 700;
   margin-bottom: 1.25rem;
   letter-spacing: 0.02em;
+  max-width: 100%;
 }
 
 .sample-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.45rem;
   align-items: center;
   margin-top: 0.75rem;
 }
@@ -207,147 +239,123 @@ article:hover {
   color: var(--chip-text);
   border-radius: var(--border-radius, 6px);
   padding: 0.3rem 0.65rem;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-family: var(--font-mono);
   text-decoration: none;
   cursor: pointer;
   transition: all 0.15s ease;
+  word-break: break-all;
 }
 
 .sample-chip:hover {
-  background: var(--primary);
+  background: var(--pico-primary);
   color: #ffffff;
-  border-color: var(--primary);
-  transform: translateY(-1px);
+  border-color: var(--pico-primary);
 }
 
-/* Stats Grid */
+/* 7. Stats Grid (Responsive 2-col on mobile, 4-col on desktop) */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.85rem;
   margin: 2rem 0;
 }
 
 .stat-card {
   text-align: center;
   margin-bottom: 0;
-  padding: 1.25rem;
+  padding: 1.15rem 0.85rem;
   border-radius: var(--border-radius, 8px);
 }
 
 .stat-num {
-  font-size: 2.1rem;
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
   font-weight: 800;
-  color: var(--primary);
+  color: #60a5fa;
   line-height: 1;
   margin-bottom: 0.35rem;
 }
 
 .stat-label {
-  font-size: 0.88rem;
+  font-size: clamp(0.8rem, 2vw, 0.88rem);
   font-weight: 700;
   margin-bottom: 0.2rem;
+  color: #f1f5f9;
 }
 
-/* Rule Badges */
+/* 8. Rule Badges */
 .rule-badge {
   display: inline-block;
-  padding: 0.25rem 0.65rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .rule-badge.flagged {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #f87171;
+  background: #450a0a !important;
+  color: #fca5a5 !important;
+  border: 1px solid #ef4444 !important;
 }
 
 .rule-badge.clear {
-  background: var(--surface-subtle);
-  color: var(--muted-color);
-  border: 1px solid var(--muted-border-color);
+  background: var(--surface-subtle) !important;
+  color: #94a3b8 !important;
+  border: 1px solid var(--card-border-color) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .rule-badge.flagged {
-    background: #450a0a;
-    color: #fca5a5;
-    border: 1px solid #ef4444;
-  }
-}
-
-[data-theme="dark"] .rule-badge.flagged {
-  background: #450a0a;
-  color: #fca5a5;
-  border: 1px solid #ef4444;
-}
-
-/* Advisory Box */
+/* 9. Advisory Box */
 .advisory-box {
-  border-left: 4px solid var(--primary);
-  padding: 1.1rem 1.35rem;
-  margin: 1.5rem 0;
-  font-size: 0.92rem;
+  border-left: 4px solid var(--pico-primary);
+  padding: 1rem 1.15rem;
+  margin: 1.25rem 0;
+  font-size: clamp(0.85rem, 2.5vw, 0.92rem);
   line-height: 1.6;
   background: var(--surface-subtle);
   border-radius: 0 var(--border-radius, 8px) var(--border-radius, 8px) 0;
+  color: #e2e8f0;
 }
 
 .advisory-box.warning {
-  border-left-color: #d97706;
+  border-left-color: #f59e0b;
 }
 
 .advisory-box.danger {
-  border-left-color: #dc2626;
+  border-left-color: #ef4444;
 }
 
-/* Brand icon in nav */
+/* 10. Brand in Navigation */
 .brand-link {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   text-decoration: none;
   font-weight: 800;
-  font-size: 1.3rem;
-  color: var(--color);
+  font-size: 1.25rem;
+  color: #f8fafc !important;
 }
 
 .brand-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--primary);
+  width: 30px;
+  height: 30px;
+  background: var(--pico-primary);
   color: #ffffff;
-  border-radius: 8px;
+  border-radius: 7px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* Decision Engine Breakdown Meters */
-.decision-meter-container {
-  margin: 1.25rem 0;
-}
-
-.decision-meter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.88rem;
-  font-weight: 700;
-  margin-bottom: 0.35rem;
-}
-
+/* 11. Decision Meters */
 .decision-meter-bar {
   height: 10px;
   border-radius: 9999px;
-  background: var(--muted-border-color);
+  background: rgba(71, 85, 105, 0.5);
   overflow: hidden;
   position: relative;
 }
@@ -358,13 +366,13 @@ article:hover {
   transition: width 0.4s ease;
 }
 
-/* Clean Data Provenance Cards */
+/* 12. Dataset Cards */
 .dataset-card {
   border: 1px solid var(--card-border-color);
   background: var(--surface-subtle);
   border-radius: var(--border-radius, 8px);
-  padding: 1.25rem;
-  margin-bottom: 1rem;
+  padding: 1.15rem;
+  margin-bottom: 0.75rem;
 }
 
 .dataset-badge {
@@ -374,27 +382,92 @@ article:hover {
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  background: var(--primary);
+  background: var(--pico-primary);
   color: #ffffff;
   margin-bottom: 0.5rem;
 }
 
-/* Responsive Table Enhancements */
+/* 13. Responsive Tables */
 table {
   width: 100%;
-  font-size: 0.88rem;
+  font-size: clamp(0.8rem, 2vw, 0.88rem);
   border-collapse: collapse;
 }
 
 th {
   background: var(--surface-subtle);
   font-weight: 700;
-  padding: 0.75rem 0.85rem;
+  padding: 0.65rem 0.75rem;
   border-bottom: 2px solid var(--card-border-color);
+  color: #f8fafc;
+  white-space: nowrap;
 }
 
 td {
-  padding: 0.75rem 0.85rem;
+  padding: 0.65rem 0.75rem;
   border-bottom: 1px solid var(--card-border-color);
   vertical-align: middle;
+  color: #e2e8f0;
+}
+
+/* 14. Mobile Screen Specific Optimizations (<= 640px) */
+@media (max-width: 640px) {
+  /* Stack URL input and submit button vertically on small screens */
+  fieldset[role="group"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  fieldset[role="group"] input[type="text"] {
+    width: 100% !important;
+    border-radius: var(--border-radius, 8px) !important;
+    border: 1px solid var(--pico-form-element-border-color) !important;
+  }
+
+  fieldset[role="group"] button {
+    width: 100% !important;
+    border-radius: var(--border-radius, 8px) !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* Compact navigation for phones */
+  nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  nav ul:first-child {
+    justify-content: center;
+    margin-bottom: 0.25rem;
+  }
+
+  nav ul:last-child {
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  nav ul li a {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* Make tables horizontally scrollable with smooth touch */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--border-radius, 8px);
+  }
+
+  /* Footer adjustments */
+  footer.container .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
