@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "**": {
+      "includeFiles": [
+        "app/templates/**",
+        "app/static/**",
+        "ml/models/**"
+      ]
+    }
+  }
+}
